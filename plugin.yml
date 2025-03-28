@@ -1,0 +1,9 @@
+main: me.krousant.trackerapi.TrackerAPIPlugin
+name: TrackerAPI
+version: '1.0'
+description: For plugin usage
+load: POSTWORLD
+api-version: '1.16'
+author: Krousant
+website: https://www.youtube.com/channel/UCUoLq_ba_y2TqOT3qJ__AGA/channels
+prefix: TrackerAPI

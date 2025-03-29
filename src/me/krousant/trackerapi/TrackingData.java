@@ -59,6 +59,7 @@ public class TrackingData implements Serializable
         for(UUID tracker : TRACKING_MAP.keySet())
             if(TRACKING_MAP.get(tracker).equals(target))
                 TRACKING_MAP.replace(tracker, null);
+
         return true;
     }
 
@@ -75,7 +76,7 @@ public class TrackingData implements Serializable
     protected boolean setWorldExit(UUID target, Location exit)
     {
         if(!isTarget(target)) return false;
-        WORLD_EXITS.get(target).put(exit.getWorld(), exit);
+        WORLD_EXITS.get(target).replace(exit.getWorld(), exit);
         return true;
     }
 
@@ -127,5 +128,4 @@ public class TrackingData implements Serializable
     {
         return TRACKING_MAP.get(tracker) != null;
     }
-
 }

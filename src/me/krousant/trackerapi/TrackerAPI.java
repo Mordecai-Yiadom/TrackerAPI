@@ -1,11 +1,14 @@
 package me.krousant.trackerapi;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 
+import java.util.Set;
 import java.util.UUID;
 
 public class TrackerAPI
@@ -72,8 +75,74 @@ public class TrackerAPI
     }
 
 
+    public boolean setTargetForTracker(UUID tracker, UUID target)
+    {
+        if(tracker == null) throw new NullPointerException("Tracker UUID is null!");
+        return trackingData.setTargetForTracker(tracker, target);
+    }
+
+    public boolean setTargetForTracker(Player tracker, Entity target)
+    {
+        if(tracker == null) throw new NullPointerException("Tracker Player is null!");
+        return trackingData.setTargetForTracker(tracker.getUniqueId(), target.getUniqueId());
+    }
+
+    public boolean setWorldExit(UUID target, Location exit)
+    {
+        return trackingData.setWorldExit(target, exit);
+    }
+
+    public boolean setWorldExit(Player target, Location exit)
+    {
+        return trackingData.setWorldExit(target.getUniqueId(), exit);
+    }
+
+    public UUID getTargetFromTracker(UUID tracker)
+    {
+        return trackingData.getTargetFromTracker(tracker);
+    }
+
+    public UUID getTargetFromTracker(Player tracker)
+    {
+        return trackingData.getTargetFromTracker(tracker.getUniqueId());
+    }
+
+    public Set<UUID> getTrackersFromTarget(UUID target)
+    {
+        return trackingData.getTrackersFromTarget(target);
+    }
+
+    public Set<UUID> getTrackersFromTarget(Entity target)
+    {
+        return trackingData.getTrackersFromTarget(target.getUniqueId());
+    }
+
+    public Location getWorldExit(UUID target, World world)
+    {
+        return trackingData.getWorldExit(target, world);
+    }
+
+    public Location getWorldExit(Player target, World world)
+    {
+        return trackingData.getWorldExit(target.getUniqueId(), world);
+    }
+
+    public Set<UUID> getTrackers()
+    {
+        return trackingData.getTrackers();
+    }
+
+    public Set<UUID> getTargets()
+    {
+        return trackingData.getTargets();
+    }
+
+
     //Boolean Query Methods
-    public boolean isTracker(UUID player) {return trackingData.isTracker(player);}
+    public boolean isTracker(UUID player)
+    {
+        return trackingData.isTracker(player);
+    }
     //TODO add @NotNull to parameters
     public boolean isTracker(Player player)
     {
@@ -81,12 +150,25 @@ public class TrackerAPI
         return trackingData.isTracker(player.getUniqueId());
     }
 
-    public boolean isTarget(UUID entity) {return trackingData.isTracker(entity);}
+    public boolean isTarget(UUID entity)
+    {
+        return trackingData.isTracker(entity);
+    }
     //TODO add @NotNull to parameters
     public boolean isTarget(Entity entity)
     {
         if(entity == null) throw new NullPointerException("Entity is null!");
         return trackingData.isTracker(entity.getUniqueId());
+    }
+
+    public boolean hasTarget(UUID tracker)
+    {
+        return trackingData.hasTarget(tracker);
+    }
+
+    public boolean hasTarget(Player tracker)
+    {
+        return trackingData.hasTarget(tracker.getUniqueId());
     }
 
 }

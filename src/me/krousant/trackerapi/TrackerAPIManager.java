@@ -8,9 +8,9 @@ import java.util.List;
 
 public class TrackerAPIManager implements Serializable
 {
-    private List<TrackerAPI> API_INSTANCES;
+    private final List<TrackerAPI> API_INSTANCES;
 
-    public TrackerAPIManager()
+    protected TrackerAPIManager()
     {
         API_INSTANCES = new ArrayList<>();
     }
@@ -22,5 +22,8 @@ public class TrackerAPIManager implements Serializable
         return apiInstance;
     }
 
-    public boolean destroyInstance(TrackerAPI apiInstance) {return API_INSTANCES.remove(apiInstance);}
+    public boolean destroyInstance(TrackerAPI apiInstance)
+    {
+        return API_INSTANCES.remove(apiInstance);
+    }
 }

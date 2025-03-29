@@ -7,15 +7,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-
 import java.util.Set;
 import java.util.UUID;
 
 public class TrackerAPI
 {
-    private Plugin plugin;
-    private TrackerAPISettings settings;
-    private TrackingData trackingData;
+    private final Plugin plugin;
+    private final TrackerAPISettings settings;
+    private final TrackingData trackingData;
 
     protected TrackerAPI(Plugin plugin, TrackerAPISettings settings)
     {

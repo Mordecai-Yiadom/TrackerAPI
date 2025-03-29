@@ -17,9 +17,9 @@ public class TrackingData implements Serializable
      * Targets can be of type Entity
      *************************************************************/
 
-    private Map<UUID, UUID> TRACKING_MAP;
-    private Map<UUID, Map<World, Location>> WORLD_EXITS;
-    private Set<UUID> TARGETS;
+    private final Map<UUID, UUID> TRACKING_MAP;
+    private final Map<UUID, Map<World, Location>> WORLD_EXITS;
+    private final Set<UUID> TARGETS;
 
     protected TrackingData()
     {

@@ -72,7 +72,6 @@ public class TrackerAPI
     }
 
 
-
     //Boolean Query Methods
     public boolean isTracker(UUID player) {return trackingData.isTracker(player);}
     //TODO add @NotNull to parameters

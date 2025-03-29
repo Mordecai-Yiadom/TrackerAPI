@@ -30,59 +30,85 @@ public class TrackingData implements Serializable
 
     protected boolean addTracker(UUID tracker)
     {
-        return false;
+        if(isTracker(tracker)) return false;
+        TRACKING_MAP.put(tracker, null);
+        return true;
     }
 
     protected boolean removeTracker(UUID tracker)
     {
-        return false;
+        if(!isTracker(tracker)) return false;
+        TRACKING_MAP.remove(tracker);
+        return true;
     }
 
     protected boolean addTarget(UUID target)
     {
-        return false;
+        if(isTracker(target)) return false;
+        TARGETS.add(target);
+        WORLD_EXITS.put(target, new HashMap<>());
+        return true;
     }
 
     protected boolean removeTarget(UUID target)
     {
-        return false;
+        if(!isTracker(target)) return false;
+        TARGETS.remove(target);
+        WORLD_EXITS.remove(target);
+
+        for(UUID tracker : TRACKING_MAP.keySet())
+            if(TRACKING_MAP.get(tracker).equals(target))
+                TRACKING_MAP.replace(tracker, null);
+        return true;
     }
 
     protected boolean setTargetForTracker(UUID tracker, UUID target)
     {
+        if(isTracker(tracker) && isTarget(target))
+        {
+            TRACKING_MAP.replace(tracker, target);
+            return true;
+        }
         return false;
     }
 
     protected boolean setWorldExit(UUID target, Location exit)
     {
-        return false;
+        if(!isTarget(target)) return false;
+        WORLD_EXITS.get(target).put(exit.getWorld(), exit);
+        return true;
     }
 
 
     //Utility Accessor Methods
     protected UUID getTargetFromTracker(UUID tracker)
     {
-        return null;
+        return TRACKING_MAP.get(tracker);
     }
 
-    protected UUID getTrackerFromTarget(UUID target)
+    protected Set<UUID> getTrackersFromTarget(UUID target)
     {
-        return null;
+        Set<UUID> trackers = new HashSet<>();
+
+        for(UUID tracker : TRACKING_MAP.keySet())
+            if(TRACKING_MAP.get(tracker).equals(target)) trackers.add(tracker);
+
+        return trackers;
     }
 
-    protected Location getWorldExit(UUID target)
+    protected Location getWorldExit(UUID target, World world)
     {
-        return null;
+        return WORLD_EXITS.get(target).get(world);
     }
 
     protected Set<UUID> getTrackers()
     {
-        return null;
+        return new HashSet<>(TRACKING_MAP.keySet());
     }
 
     protected Set<UUID> getTargets()
     {
-        return null;
+        return new HashSet<>(TARGETS);
     }
 
 
@@ -101,6 +127,5 @@ public class TrackingData implements Serializable
     {
         return TRACKING_MAP.get(tracker) != null;
     }
-
 
 }

@@ -24,6 +24,7 @@ public class TrackerAPIManager implements Serializable
 
     public boolean destroyInstance(TrackerAPI apiInstance)
     {
+        apiInstance.destroy();
         return API_INSTANCES.remove(apiInstance);
     }
 }

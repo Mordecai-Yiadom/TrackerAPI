@@ -12,14 +12,8 @@ public class TrackerAPISettings
     private Map<Option, Boolean> SETTINGS_MAP;
     private final Set<TrackerAPISettingChangeListener> LISTENERS = new HashSet<>();
 
-    //THIS CANNOT BE CHANGED
-    private final ItemStack DEFAULT_TRACKER_COMPASS;
-
     private TrackerAPISettings(ItemStack compass)
     {
-        if(compass == null) DEFAULT_TRACKER_COMPASS = TrackerAPIUtil.DEFAULT_TRACKER_COMPASS;
-        else DEFAULT_TRACKER_COMPASS = compass;
-
         SETTINGS_MAP = new HashMap<>();
         for(Option option : Option.values()) SETTINGS_MAP.put(option, false);
     }
@@ -36,11 +30,6 @@ public class TrackerAPISettings
         notifyChangeListeners(option, SETTINGS_MAP.get(option), value);
         SETTINGS_MAP.replace(option, value);
         return this;
-    }
-
-    public ItemStack getDefaultTrackerCompass()
-    {
-        return DEFAULT_TRACKER_COMPASS;
     }
 
     public boolean registerChangeListener(TrackerAPISettingChangeListener listener)

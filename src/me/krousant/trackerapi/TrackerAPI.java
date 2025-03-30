@@ -7,24 +7,29 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
-public class TrackerAPI
+public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISettingChangeListener, Serializable
 {
     private final Plugin plugin;
     private final TrackerAPISettings settings;
     private final TrackingData trackingData;
+    private final UUID ID;
 
     protected TrackerAPI(Plugin plugin, TrackerAPISettings settings)
     {
+        super();
         this.plugin = plugin;
         this.settings = settings;
+        ID = UUID.randomUUID();
         trackingData = new TrackingData();
     }
 
     public TrackerAPISettings settings(){return settings;}
     public Plugin plugin(){return plugin;}
+    public UUID id(){return ID;}
 
     //TRACKER METHODS
     public boolean addTracker(UUID tracker)
@@ -168,6 +173,17 @@ public class TrackerAPI
     public boolean hasTarget(Player tracker)
     {
         return trackingData.hasTarget(tracker.getUniqueId());
+    }
+
+    protected void destroy()
+    {
+
+    }
+
+    @Override
+    public void settingChanged(TrackerAPISettings.Option option, boolean oldValue, boolean newValue)
+    {
+
     }
 
 }

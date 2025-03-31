@@ -1,13 +1,15 @@
 package me.krousant.trackerapi;
 
+import me.krousant.trackerapi.event.action.CompassAction;
 import me.krousant.trackerapi.event.action.NullAction;
+import me.krousant.trackerapi.event.listener.CompassActionListener;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.CompassMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.io.Serializable;
 import java.util.*;
 
 public abstract class TrackerAPICompassManager
@@ -74,8 +76,20 @@ public abstract class TrackerAPICompassManager
         List<String> lore = new ArrayList<>();
         lore.add(API_INSTANCE.id().toString());
         itemMeta.setLore(lore);
-        compass.setItemMeta(itemMeta);
 
+        compass.setItemMeta(itemMeta);
         return compass;
+    }
+
+    public boolean setTrackerCompassTarget(Player tracker, Location location)
+    {
+        ItemStack compass = getTrackerCompassFromInventory(tracker.getInventory());
+        if(compass == null) return false;
+
+        CompassMeta compassMeta = (CompassMeta) compass.getItemMeta();
+        compassMeta.setLodestone(location);
+
+        compass.setItemMeta(compassMeta);
+        return true;
     }
 }

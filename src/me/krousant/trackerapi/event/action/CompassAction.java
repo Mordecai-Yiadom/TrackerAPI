@@ -1,4 +1,4 @@
-package me.krousant.trackerapi;
+package me.krousant.trackerapi.event.action;
 
 public enum CompassAction
 {

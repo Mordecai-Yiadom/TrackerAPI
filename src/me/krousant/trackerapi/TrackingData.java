@@ -1,5 +1,6 @@
 package me.krousant.trackerapi;
 
+import me.krousant.trackerapi.event.listener.TrackingDataChangeListener;
 import org.bukkit.*;
 
 import java.io.Serializable;
@@ -20,18 +21,21 @@ public class TrackingData implements Serializable
     private final Map<UUID, UUID> TRACKING_MAP;
     private final Map<UUID, Map<World, Location>> WORLD_EXITS;
     private final Set<UUID> TARGETS;
+    private final List<TrackingDataChangeListener> CHANGE_LISTENERS;
 
     protected TrackingData()
     {
         TRACKING_MAP = new HashMap<>();
         WORLD_EXITS = new HashMap<>();
         TARGETS = new HashSet<>();
+        CHANGE_LISTENERS = new ArrayList<>();
     }
 
     protected boolean addTracker(UUID tracker)
     {
         if(isTracker(tracker)) return false;
         TRACKING_MAP.put(tracker, null);
+        for(TrackingDataChangeListener listener : CHANGE_LISTENERS) listener.trackerAdded(tracker);
         return true;
     }
 
@@ -39,6 +43,7 @@ public class TrackingData implements Serializable
     {
         if(!isTracker(tracker)) return false;
         TRACKING_MAP.remove(tracker);
+        for(TrackingDataChangeListener listener : CHANGE_LISTENERS) listener.trackerRemoved(tracker);
         return true;
     }
 
@@ -47,6 +52,7 @@ public class TrackingData implements Serializable
         if(isTracker(target)) return false;
         TARGETS.add(target);
         WORLD_EXITS.put(target, new HashMap<>());
+        for(TrackingDataChangeListener listener : CHANGE_LISTENERS) listener.targetAdded(target);
         return true;
     }
 
@@ -60,6 +66,7 @@ public class TrackingData implements Serializable
             if(TRACKING_MAP.get(tracker).equals(target))
                 TRACKING_MAP.replace(tracker, null);
 
+        for(TrackingDataChangeListener listener : CHANGE_LISTENERS) listener.targetRemoved(target);
         return true;
     }
 
@@ -67,6 +74,9 @@ public class TrackingData implements Serializable
     {
         if(isTracker(tracker) && isTarget(target))
         {
+            for(TrackingDataChangeListener listener : CHANGE_LISTENERS)
+                listener.trackerTargetChanged(tracker, getTargetFromTracker(tracker), target);
+
             TRACKING_MAP.replace(tracker, target);
             return true;
         }
@@ -76,6 +86,10 @@ public class TrackingData implements Serializable
     protected boolean setWorldExit(UUID target, Location exit)
     {
         if(!isTarget(target)) return false;
+
+        for(TrackingDataChangeListener listener : CHANGE_LISTENERS)
+            listener.worldExitChanged(exit.getWorld(), getWorldExit(target, exit.getWorld()), exit);
+
         WORLD_EXITS.get(target).replace(exit.getWorld(), exit);
         return true;
     }
@@ -127,5 +141,15 @@ public class TrackingData implements Serializable
     protected boolean hasTarget(UUID tracker)
     {
         return TRACKING_MAP.get(tracker) != null;
+    }
+
+    public boolean addChangeListener(TrackingDataChangeListener listener)
+    {
+        return CHANGE_LISTENERS.add(listener);
+    }
+
+    public boolean removeChangeListener(TrackingDataChangeListener listener)
+    {
+        return CHANGE_LISTENERS.remove(listener);
     }
 }

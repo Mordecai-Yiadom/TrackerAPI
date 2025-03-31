@@ -1,5 +1,7 @@
 package me.krousant.trackerapi;
 
+import me.krousant.trackerapi.event.listener.TrackerAPISettingChangeListener;
+import me.krousant.trackerapi.event.listener.TrackingDataChangeListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -11,7 +13,8 @@ import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
-public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISettingChangeListener, Serializable
+public class TrackerAPI extends TrackerAPICompassManager
+        implements TrackerAPISettingChangeListener, TrackingDataChangeListener, Serializable
 {
     private final Plugin plugin;
     private final TrackerAPISettings settings;
@@ -34,23 +37,35 @@ public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISe
     //TRACKER METHODS
     public boolean addTracker(UUID tracker)
     {
+        if(settings.get(TrackerAPISettings.Option.GIVE_COMPASS_ON_ADD))
+            giveTrackerCompass(Bukkit.getPlayer(tracker));
+
         return trackingData.addTracker(tracker);
     }
 
     public boolean addTracker(Player tracker)
     {
         if(tracker == null) throw new NullPointerException("Player is null!");
+        if(settings.get(TrackerAPISettings.Option.GIVE_COMPASS_ON_ADD))
+            giveTrackerCompass(tracker);
+
         return trackingData.addTracker(tracker.getUniqueId());
     }
 
     public boolean removeTracker(UUID tracker)
     {
+        if(settings.get(TrackerAPISettings.Option.REMOVE_COMPASS_ON_REMOVE))
+            removeTrackerCompass(Bukkit.getPlayer(tracker));
+
         return trackingData.removeTracker(tracker);
     }
 
     public boolean removeTracker(Player tracker)
     {
         if(tracker == null) throw new NullPointerException("Player is null!");
+        if(settings.get(TrackerAPISettings.Option.REMOVE_COMPASS_ON_REMOVE))
+            removeTrackerCompass(tracker);
+
         return trackingData.removeTracker(tracker.getUniqueId());
     }
 
@@ -186,4 +201,37 @@ public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISe
 
     }
 
+    @Override
+    public void trackerAdded(UUID tracker)
+    {
+
+    }
+
+    @Override
+    public void trackerRemoved(UUID tracker)
+    {
+
+    }
+
+    @Override
+    public void targetAdded(UUID tracker) {
+
+    }
+
+    @Override
+    public void targetRemoved(UUID tracker) {
+
+    }
+
+    @Override
+    public void worldExitChanged(World world, Location oldLocation, Location newLocation)
+    {
+
+    }
+
+    @Override
+    public void trackerTargetChanged(UUID tracker, UUID oldTarget, UUID newTarget)
+    {
+
+    }
 }

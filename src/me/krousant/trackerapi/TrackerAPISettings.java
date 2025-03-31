@@ -1,5 +1,6 @@
 package me.krousant.trackerapi;
 
+import me.krousant.trackerapi.event.listener.TrackerAPISettingChangeListener;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -32,6 +33,11 @@ public class TrackerAPISettings
         return this;
     }
 
+    public boolean get(Option option)
+    {
+        return SETTINGS_MAP.get(option);
+    }
+
     public boolean registerChangeListener(TrackerAPISettingChangeListener listener)
     {
         return LISTENERS.add(listener);
@@ -54,9 +60,11 @@ public class TrackerAPISettings
     {
         AUTO_TRACK_MOVEMENT,
         AUTO_TRACK_WORLD_EXITS,
+        DESTROY_COMPASSES_WHEN_FINISHED,
         DROP_COMPASS_ON_DEATH,
         DROPPABLE_COMPASS,
         ENABLE_DEBUG_MODE,
-        DESTROY_COMPASSES_WHEN_FINISHED
+        GIVE_COMPASS_ON_ADD,
+        REMOVE_COMPASS_ON_REMOVE;
     }
 }

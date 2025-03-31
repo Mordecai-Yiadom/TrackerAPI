@@ -1,4 +1,6 @@
-package me.krousant.trackerapi;
+package me.krousant.trackerapi.event.listener;
+
+import me.krousant.trackerapi.TrackerAPISettings;
 
 public interface TrackerAPISettingChangeListener
 {

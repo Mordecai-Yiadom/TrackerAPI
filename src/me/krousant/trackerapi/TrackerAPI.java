@@ -1,6 +1,6 @@
 package me.krousant.trackerapi;
 
-import me.krousant.trackerapi.event.listener.TrackerAPISettingChangeListener;
+import me.krousant.trackerapi.event.listener.TrackerAPISettingsChangeListener;
 import me.krousant.trackerapi.event.listener.TrackingDataChangeListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public class TrackerAPI extends TrackerAPICompassManager
-        implements TrackerAPISettingChangeListener, TrackingDataChangeListener, Serializable
+        implements TrackerAPISettingsChangeListener, TrackingDataChangeListener, Serializable
 {
     private final Plugin plugin;
     private final TrackerAPISettings settings;

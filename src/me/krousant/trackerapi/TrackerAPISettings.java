@@ -1,6 +1,6 @@
 package me.krousant.trackerapi;
 
-import me.krousant.trackerapi.event.listener.TrackerAPISettingChangeListener;
+import me.krousant.trackerapi.event.listener.TrackerAPISettingsChangeListener;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -11,7 +11,7 @@ import java.util.Set;
 public class TrackerAPISettings
 {
     private Map<Option, Boolean> SETTINGS_MAP;
-    private final Set<TrackerAPISettingChangeListener> LISTENERS = new HashSet<>();
+    private final Set<TrackerAPISettingsChangeListener> LISTENERS = new HashSet<>();
 
     private TrackerAPISettings(ItemStack compass)
     {
@@ -38,19 +38,19 @@ public class TrackerAPISettings
         return SETTINGS_MAP.get(option);
     }
 
-    public boolean registerChangeListener(TrackerAPISettingChangeListener listener)
+    public boolean registerChangeListener(TrackerAPISettingsChangeListener listener)
     {
         return LISTENERS.add(listener);
     }
 
-    public boolean unregisterChangeListener(TrackerAPISettingChangeListener listener)
+    public boolean unregisterChangeListener(TrackerAPISettingsChangeListener listener)
     {
         return LISTENERS.remove(listener);
     }
 
     public void notifyChangeListeners(Option option, boolean oldValue, boolean newValue)
     {
-        for(TrackerAPISettingChangeListener listener : LISTENERS)
+        for(TrackerAPISettingsChangeListener listener : LISTENERS)
             listener.settingChanged(option, oldValue, newValue);
     }
 

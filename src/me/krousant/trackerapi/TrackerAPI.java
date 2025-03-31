@@ -1,5 +1,6 @@
 package me.krousant.trackerapi;
 
+import me.krousant.trackerapi.event.listener.DefaultTrackingDataChangeListener;
 import me.krousant.trackerapi.event.listener.TrackerAPISettingsChangeListener;
 import me.krousant.trackerapi.event.listener.TrackingDataChangeListener;
 import org.bukkit.Bukkit;
@@ -13,8 +14,7 @@ import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
-public class TrackerAPI extends TrackerAPICompassManager
-        implements TrackerAPISettingsChangeListener, TrackingDataChangeListener, Serializable
+public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISettingsChangeListener, Serializable
 {
     private final Plugin plugin;
     private final TrackerAPISettings settings;
@@ -24,6 +24,8 @@ public class TrackerAPI extends TrackerAPICompassManager
     protected TrackerAPI(Plugin plugin, TrackerAPISettings settings)
     {
         super();
+        API_INSTANCE = this;
+
         this.plugin = plugin;
         this.settings = settings;
         ID = UUID.randomUUID();
@@ -33,6 +35,13 @@ public class TrackerAPI extends TrackerAPICompassManager
     public TrackerAPISettings settings(){return settings;}
     public Plugin plugin(){return plugin;}
     public UUID id(){return ID;}
+
+    public void init(TrackingDataChangeListener listener)
+    {
+        if(listener != null) registerTrackingDataChangeListener(listener);
+        else registerTrackingDataChangeListener(new DefaultTrackingDataChangeListener(this));
+    }
+
 
     //TRACKER METHODS
     public boolean addTracker(UUID tracker)
@@ -195,42 +204,18 @@ public class TrackerAPI extends TrackerAPICompassManager
 
     }
 
+    public boolean registerTrackingDataChangeListener(TrackingDataChangeListener listener)
+    {
+        return trackingData.registerChangeListener(listener);
+    }
+
+    public boolean unregisterTrackingDataChangeListener(TrackingDataChangeListener listener)
+    {
+        return trackingData.unregisterChangeListener(listener);
+    }
+
     @Override
     public void settingChanged(TrackerAPISettings.Option option, boolean oldValue, boolean newValue)
-    {
-
-    }
-
-    @Override
-    public void trackerAdded(UUID tracker)
-    {
-
-    }
-
-    @Override
-    public void trackerRemoved(UUID tracker)
-    {
-
-    }
-
-    @Override
-    public void targetAdded(UUID tracker) {
-
-    }
-
-    @Override
-    public void targetRemoved(UUID tracker) {
-
-    }
-
-    @Override
-    public void worldExitChanged(UUID target, World world, Location oldLocation, Location newLocation)
-    {
-
-    }
-
-    @Override
-    public void trackerTargetChanged(UUID tracker, UUID oldTarget, UUID newTarget)
     {
 
     }

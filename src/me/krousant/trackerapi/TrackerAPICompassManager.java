@@ -15,7 +15,7 @@ import java.util.*;
 public abstract class TrackerAPICompassManager
 {
     private final Map<CompassAction, CompassActionListener> ACTION_MAP;
-    private TrackerAPI API_INSTANCE;
+    protected TrackerAPI API_INSTANCE;
 
     protected TrackerAPICompassManager()
     {

@@ -143,12 +143,12 @@ public class TrackingData implements Serializable
         return TRACKING_MAP.get(tracker) != null;
     }
 
-    public boolean addChangeListener(TrackingDataChangeListener listener)
+    public boolean registerChangeListener(TrackingDataChangeListener listener)
     {
         return CHANGE_LISTENERS.add(listener);
     }
 
-    public boolean removeChangeListener(TrackingDataChangeListener listener)
+    public boolean unregisterChangeListener(TrackingDataChangeListener listener)
     {
         return CHANGE_LISTENERS.remove(listener);
     }

@@ -13,7 +13,7 @@ public interface TrackingDataChangeListener
     void targetAdded(UUID tracker);
     void targetRemoved(UUID tracker);
 
-    void worldExitChanged(World world, Location oldLocation, Location newLocation);
+    void worldExitChanged(UUID target, World world, Location oldLocation, Location newLocation);
 
     void trackerTargetChanged(UUID tracker, UUID oldTarget, UUID newTarget);
 

@@ -224,7 +224,7 @@ public class TrackerAPI extends TrackerAPICompassManager
     }
 
     @Override
-    public void worldExitChanged(World world, Location oldLocation, Location newLocation)
+    public void worldExitChanged(UUID target, World world, Location oldLocation, Location newLocation)
     {
 
     }

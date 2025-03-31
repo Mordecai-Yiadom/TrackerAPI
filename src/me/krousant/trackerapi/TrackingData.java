@@ -88,7 +88,7 @@ public class TrackingData implements Serializable
         if(!isTarget(target)) return false;
 
         for(TrackingDataChangeListener listener : CHANGE_LISTENERS)
-            listener.worldExitChanged(exit.getWorld(), getWorldExit(target, exit.getWorld()), exit);
+            listener.worldExitChanged(target, exit.getWorld(), getWorldExit(target, exit.getWorld()), exit);
 
         WORLD_EXITS.get(target).replace(exit.getWorld(), exit);
         return true;

@@ -13,15 +13,15 @@ public class TrackerAPISettings
     private Map<Option, Boolean> SETTINGS_MAP;
     private final Set<TrackerAPISettingsChangeListener> LISTENERS = new HashSet<>();
 
-    private TrackerAPISettings(ItemStack compass)
+    private TrackerAPISettings()
     {
         SETTINGS_MAP = new HashMap<>();
         for(Option option : Option.values()) SETTINGS_MAP.put(option, false);
     }
 
-    private static TrackerAPISettings build(ItemStack defaultTrackerCompass)
+    private static TrackerAPISettings build()
     {
-        return new TrackerAPISettings(defaultTrackerCompass);
+        return new TrackerAPISettings();
     }
 
     public TrackerAPISettings set(Option option, boolean value)

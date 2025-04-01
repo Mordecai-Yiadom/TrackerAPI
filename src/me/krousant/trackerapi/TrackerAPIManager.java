@@ -1,5 +1,6 @@
 package me.krousant.trackerapi;
 
+import me.krousant.trackerapi.event.listener.TrackingDataChangeListener;
 import org.bukkit.plugin.Plugin;
 
 import java.io.Serializable;
@@ -15,9 +16,9 @@ public class TrackerAPIManager implements Serializable
         API_INSTANCES = new ArrayList<>();
     }
 
-    public TrackerAPI createInstance(Plugin plugin, TrackerAPISettings settings)
+    public TrackerAPI createInstance(Plugin plugin, TrackerAPISettings settings, TrackingDataChangeListener listener)
     {
-        TrackerAPI apiInstance = new TrackerAPI(plugin, settings);
+        TrackerAPI apiInstance = new TrackerAPI(plugin, settings, null);
         API_INSTANCES.add(apiInstance);
         return apiInstance;
     }

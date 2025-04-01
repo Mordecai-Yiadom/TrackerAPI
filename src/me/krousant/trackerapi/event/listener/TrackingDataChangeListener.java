@@ -3,9 +3,10 @@ package me.krousant.trackerapi.event.listener;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public interface TrackingDataChangeListener
+public interface TrackingDataChangeListener extends Serializable
 {
     void trackerAdded(UUID tracker);
     void trackerRemoved(UUID tracker);

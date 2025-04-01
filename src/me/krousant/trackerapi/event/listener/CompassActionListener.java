@@ -3,7 +3,9 @@ package me.krousant.trackerapi.event.listener;
 import me.krousant.trackerapi.TrackerAPI;
 import org.bukkit.event.Event;
 
-public interface CompassActionListener
+import java.io.Serializable;
+
+public interface CompassActionListener extends Serializable
 {
     void actionPerformed(TrackerAPI apiInstance, Event event);
 }

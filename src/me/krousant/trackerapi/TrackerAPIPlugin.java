@@ -4,18 +4,20 @@ import org.bukkit.*;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.command.*;
 
+import java.util.UUID;
+
 public class TrackerAPIPlugin extends JavaPlugin
 {
     @Override
     public void onEnable()
     {
-        sendConsoleMessage(ConsoleMessageType.SUCCESS, "TrackerAPI has been enabled.");
+        sendConsoleMessage(ConsoleMessageType.SUCCESS, "TrackerAPI has been enabled.", null);
     }
 
     @Override
     public void onDisable()
     {
-        sendConsoleMessage(ConsoleMessageType.NEUTRAL, "TrackerAPI has been disabled.");
+        sendConsoleMessage(ConsoleMessageType.NEUTRAL, "TrackerAPI has been disabled.", null);
     }
 
     @Override
@@ -25,11 +27,14 @@ public class TrackerAPIPlugin extends JavaPlugin
     }
 
     //Convenience Methods(s) for Plugin
-    public static void sendConsoleMessage(ConsoleMessageType messageType, String message)
+    public static void sendConsoleMessage(ConsoleMessageType messageType, String message, UUID instanceID)
     {
         if(message == null) return;
+
+        String id = (instanceID == null) ? "" : "|ID: " + instanceID.toString() + "|";
+
         Bukkit.getConsoleSender()
-                .sendMessage(String.format("%s[TrackerAPI] (%s): %s", messageType.color, messageType.prefix, message));
+                .sendMessage(String.format("%s[TrackerAPI] %s (%s): %s", messageType.color, id, messageType.prefix, message));
     }
 
     public enum ConsoleMessageType

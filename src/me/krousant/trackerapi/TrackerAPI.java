@@ -21,7 +21,7 @@ public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISe
     private final TrackingData trackingData;
     private final UUID ID;
 
-    protected TrackerAPI(Plugin plugin, TrackerAPISettings settings)
+    protected TrackerAPI(Plugin plugin, TrackerAPISettings settings, TrackingDataChangeListener listener)
     {
         super();
         API_INSTANCE = this;
@@ -30,17 +30,15 @@ public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISe
         this.settings = settings;
         ID = UUID.randomUUID();
         trackingData = new TrackingData();
+
+        if(listener == null)
+            registerTrackingDataChangeListener(new DefaultTrackingDataChangeListener(this));
+        else registerTrackingDataChangeListener(listener);
     }
 
     public TrackerAPISettings settings(){return settings;}
     public Plugin plugin(){return plugin;}
     public UUID id(){return ID;}
-
-    public void init(TrackingDataChangeListener listener)
-    {
-        if(listener != null) registerTrackingDataChangeListener(listener);
-        else registerTrackingDataChangeListener(new DefaultTrackingDataChangeListener(this));
-    }
 
 
     //TRACKER METHODS
@@ -217,6 +215,8 @@ public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISe
     @Override
     public void settingChanged(TrackerAPISettings.Option option, boolean oldValue, boolean newValue)
     {
-
+        if(settings.get(TrackerAPISettings.Option.ENABLE_DEBUG_MODE))
+            TrackerAPIPlugin.sendConsoleMessage(TrackerAPIPlugin.ConsoleMessageType.NEUTRAL,
+                    "Settings have changed.", ID);
     }
 }

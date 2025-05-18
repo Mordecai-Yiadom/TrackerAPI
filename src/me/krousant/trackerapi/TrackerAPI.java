@@ -198,9 +198,7 @@ public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISe
     }
 
     protected void destroy()
-    {
-
-    }
+    {}
 
     public boolean registerTrackingDataChangeListener(TrackingDataChangeListener listener)
     {

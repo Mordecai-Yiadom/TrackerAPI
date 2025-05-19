@@ -17,8 +17,8 @@ import java.util.UUID;
 
 public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISettingsChangeListener, Serializable
 {
-    private Set<Tracker> TRACKERS;
-    private Set<Target> TARGETS;
+    private final Set<Tracker> TRACKERS;
+    private final Set<Target> TARGETS;
 
     private final TrackerAPISettings settings;
     private final UUID ID;

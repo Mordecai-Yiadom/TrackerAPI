@@ -11,204 +11,124 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISettingsChangeListener, Serializable
 {
-    private final Plugin plugin;
+    private Set<Tracker> TRACKERS;
+    private Set<Target> TARGETS;
+
     private final TrackerAPISettings settings;
-    private final TrackingData trackingData;
     private final UUID ID;
 
-    protected TrackerAPI(Plugin plugin, TrackerAPISettings settings, TrackingDataChangeListener listener)
+    protected TrackerAPI(Plugin plugin, TrackerAPISettings settings)
     {
         super();
         API_INSTANCE = this;
 
-        this.plugin = plugin;
+        TRACKERS = new HashSet<>();
+        TARGETS = new HashSet<>();
+
         this.settings = settings;
         ID = UUID.randomUUID();
-        trackingData = new TrackingData();
-
-        if(listener == null)
-            registerTrackingDataChangeListener(new DefaultTrackingDataChangeListener(this));
-        else registerTrackingDataChangeListener(listener);
     }
 
     public TrackerAPISettings settings() {return settings;}
-    public Plugin plugin() {return plugin;}
     public UUID id() {return ID;}
 
 
-    //TRACKER METHODS
-    public boolean addTracker(UUID tracker)
+    /*******************
+     TRACKER METHODS
+     ******************/
+    public boolean addTracker(Player player)
     {
-        if(settings.get(TrackerAPISettings.Option.GIVE_COMPASS_ON_ADD))
-            giveTrackerCompass(Bukkit.getPlayer(tracker));
+        Tracker tracker;
 
-        return trackingData.addTracker(tracker);
+        try {tracker = new Tracker(player);}
+        catch(NullPointerException ex){return false;}
+
+        return TRACKERS.add(tracker);
     }
 
-    public boolean addTracker(Player tracker)
+    public boolean removeTracker(Tracker tracker)
     {
-        if(tracker == null) throw new NullPointerException("Player is null!");
-        if(settings.get(TrackerAPISettings.Option.GIVE_COMPASS_ON_ADD))
-            giveTrackerCompass(tracker);
-
-        return trackingData.addTracker(tracker.getUniqueId());
+        if(tracker == null) return false;
+        return TRACKERS.remove(tracker);
     }
 
-    public boolean removeTracker(UUID tracker)
-    {
-        if(settings.get(TrackerAPISettings.Option.REMOVE_COMPASS_ON_REMOVE))
-            removeTrackerCompass(Bukkit.getPlayer(tracker));
-
-        return trackingData.removeTracker(tracker);
-    }
-
-    public boolean removeTracker(Player tracker)
-    {
-        if(tracker == null) throw new NullPointerException("Player is null!");
-        if(settings.get(TrackerAPISettings.Option.REMOVE_COMPASS_ON_REMOVE))
-            removeTrackerCompass(tracker);
-
-        return trackingData.removeTracker(tracker.getUniqueId());
-    }
-
-
-    //TARGET METHODS
-    public boolean addTarget(UUID target)
-    {
-        return trackingData.addTarget(target);
-    }
-
-    public boolean addTarget(Entity target)
-    {
-        if(target == null) throw new NullPointerException("Entity is null!");
-        return trackingData.addTarget(target.getUniqueId());
-    }
-
-    public boolean removeTarget(UUID target)
-    {
-        return trackingData.removeTarget(target);
-    }
-
-    public boolean removeTarget(Entity target)
-    {
-        if(target == null) throw new NullPointerException("Entity is null!");
-        return trackingData.removeTarget(target.getUniqueId());
-    }
-
-
-    public boolean setTargetForTracker(UUID tracker, UUID target)
-    {
-        if(tracker == null) throw new NullPointerException("Tracker UUID is null!");
-        return trackingData.setTargetForTracker(tracker, target);
-    }
-
-    public boolean setTargetForTracker(Player tracker, Entity target)
-    {
-        if(tracker == null) throw new NullPointerException("Tracker Player is null!");
-        return trackingData.setTargetForTracker(tracker.getUniqueId(), target.getUniqueId());
-    }
-
-    public boolean setWorldExit(UUID target, Location exit)
-    {
-        return trackingData.setWorldExit(target, exit);
-    }
-
-    public boolean setWorldExit(Player target, Location exit)
-    {
-        return trackingData.setWorldExit(target.getUniqueId(), exit);
-    }
-
-    public UUID getTargetFromTracker(UUID tracker)
-    {
-        return trackingData.getTargetFromTracker(tracker);
-    }
-
-    public UUID getTargetFromTracker(Player tracker)
-    {
-        return trackingData.getTargetFromTracker(tracker.getUniqueId());
-    }
-
-    public Set<UUID> getTrackersFromTarget(UUID target)
-    {
-        return trackingData.getTrackersFromTarget(target);
-    }
-
-    public Set<UUID> getTrackersFromTarget(Entity target)
-    {
-        return trackingData.getTrackersFromTarget(target.getUniqueId());
-    }
-
-    public Location getWorldExit(UUID target, World world)
-    {
-        return trackingData.getWorldExit(target, world);
-    }
-
-    public Location getWorldExit(Player target, World world)
-    {
-        return trackingData.getWorldExit(target.getUniqueId(), world);
-    }
-
-    public Set<UUID> getTrackers()
-    {
-        return trackingData.getTrackers();
-    }
-
-    public Set<UUID> getTargets()
-    {
-        return trackingData.getTargets();
-    }
-
-
-    //Boolean Query Methods
-    public boolean isTracker(UUID player)
-    {
-        return trackingData.isTracker(player);
-    }
-    //TODO add @NotNull to parameters
     public boolean isTracker(Player player)
     {
-        if(player == null) throw new NullPointerException("Player is null!");
-        return trackingData.isTracker(player.getUniqueId());
+        if(player == null) return false;
+
+        for(Tracker tracker : TRACKERS)
+            if(tracker.id().equals(player.getUniqueId())) return true;
+        return false;
     }
 
-    public boolean isTarget(UUID entity)
+    public boolean isTracker(UUID id)
     {
-        return trackingData.isTracker(entity);
+        if(id == null) return false;
+
+        for(Tracker tracker : TRACKERS)
+            if(tracker.id().equals(id)) return true;
+        return false;
     }
-    //TODO add @NotNull to parameters
+
+    public Set<Tracker> getTrackers()
+    {
+        return (HashSet<Tracker>) ((HashSet<Tracker>) TRACKERS).clone();
+    }
+
+
+    /*******************
+        TARGET METHODS
+     ******************/
+    public boolean addTarget(Entity entity)
+    {
+        Target target;
+
+        try {target = new Target(entity);}
+        catch(NullPointerException ex){return false;}
+
+        return TARGETS.add(target);
+    }
+
+    public boolean removeTarget(Target target)
+    {
+        if(target == null) return false;
+        return TARGETS.remove(target);
+    }
+
     public boolean isTarget(Entity entity)
     {
-        if(entity == null) throw new NullPointerException("Entity is null!");
-        return trackingData.isTracker(entity.getUniqueId());
+        if(entity == null) return false;
+
+        for(Target target : TARGETS)
+            if(target.id().equals(entity.getUniqueId())) return true;
+        return false;
     }
 
-    public boolean hasTarget(UUID tracker)
+    public boolean isTarget(UUID id)
     {
-        return trackingData.hasTarget(tracker);
+        if(id == null) return false;
+
+        for(Target target : TARGETS)
+            if(target.id().equals(id)) return true;
+        return false;
     }
 
-    public boolean hasTarget(Player tracker)
+    public Set<Target> getTargets()
     {
-        return trackingData.hasTarget(tracker.getUniqueId());
+        return (HashSet<Target>) ((HashSet<Target>) TARGETS).clone();
     }
+
+
 
     protected void destroy()
     {}
 
-    public boolean registerTrackingDataChangeListener(TrackingDataChangeListener listener)
-    {
-        return trackingData.registerChangeListener(listener);
-    }
-
-    public boolean unregisterTrackingDataChangeListener(TrackingDataChangeListener listener)
-    {
-        return trackingData.unregisterChangeListener(listener);
-    }
 
     @Override
     public void settingChanged(TrackerAPISettings.Option option, boolean oldValue, boolean newValue)

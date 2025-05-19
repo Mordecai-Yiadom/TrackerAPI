@@ -18,7 +18,7 @@ public class TrackerAPIManager implements Serializable
 
     public TrackerAPI createInstance(Plugin plugin, TrackerAPISettings settings, TrackingDataChangeListener listener)
     {
-        TrackerAPI apiInstance = new TrackerAPI(plugin, settings, null);
+        TrackerAPI apiInstance = new TrackerAPI(plugin, settings);
         API_INSTANCES.add(apiInstance);
         return apiInstance;
     }

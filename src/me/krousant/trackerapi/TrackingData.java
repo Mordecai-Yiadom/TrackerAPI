@@ -2,6 +2,8 @@ package me.krousant.trackerapi;
 
 import me.krousant.trackerapi.event.listener.TrackingDataChangeListener;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import java.io.Serializable;
 import java.util.*;
@@ -18,87 +20,36 @@ public class TrackingData implements Serializable
      * Targets can be of type Entity
      *************************************************************/
 
-    private final Map<UUID, UUID> TRACKING_MAP;
-    private final Map<UUID, Map<World, Location>> WORLD_EXITS;
-    private final Set<UUID> TARGETS;
-    private final List<TrackingDataChangeListener> CHANGE_LISTENERS;
+    private Set<Tracker> TRACKERS;
+    private Set<Target> TARGETS;
+    private final LinkedList<TrackingDataChangeListener> CHANGE_LISTENERS;
 
     protected TrackingData()
     {
-        TRACKING_MAP = new HashMap<>();
-        WORLD_EXITS = new HashMap<>();
+        TRACKERS = new HashSet<>();
         TARGETS = new HashSet<>();
-        CHANGE_LISTENERS = new ArrayList<>();
+
+        CHANGE_LISTENERS = new LinkedList<>();
     }
 
-    protected boolean addTracker(UUID tracker)
+    protected boolean addTracker(Player tracker)
     {
-        if(isTracker(tracker)) return false;
-        TRACKING_MAP.put(tracker, null);
-        for(TrackingDataChangeListener listener : CHANGE_LISTENERS) listener.trackerAdded(tracker);
         return true;
     }
 
-    protected boolean removeTracker(UUID tracker)
+    protected boolean removeTracker(Player tracker)
     {
-        if(!isTracker(tracker)) return false;
-        TRACKING_MAP.remove(tracker);
-        for(TrackingDataChangeListener listener : CHANGE_LISTENERS) listener.trackerRemoved(tracker);
         return true;
     }
 
-    protected boolean addTarget(UUID target)
+    protected boolean addTarget(Entity target)
     {
-        if(isTracker(target)) return false;
-        TARGETS.add(target);
-        WORLD_EXITS.put(target, new HashMap<>());
-        for(TrackingDataChangeListener listener : CHANGE_LISTENERS) listener.targetAdded(target);
         return true;
     }
 
-    protected boolean removeTarget(UUID target)
+    protected boolean removeTarget(Entity target)
     {
-        if(!isTracker(target)) return false;
-        TARGETS.remove(target);
-        WORLD_EXITS.remove(target);
-
-        for(UUID tracker : TRACKING_MAP.keySet())
-            if(TRACKING_MAP.get(tracker).equals(target))
-                TRACKING_MAP.replace(tracker, null);
-
-        for(TrackingDataChangeListener listener : CHANGE_LISTENERS) listener.targetRemoved(target);
         return true;
-    }
-
-    protected boolean setTargetForTracker(UUID tracker, UUID target)
-    {
-        if(isTracker(tracker) && isTarget(target))
-        {
-            for(TrackingDataChangeListener listener : CHANGE_LISTENERS)
-                listener.trackerTargetChanged(tracker, getTargetFromTracker(tracker), target);
-
-            TRACKING_MAP.replace(tracker, target);
-            return true;
-        }
-        return false;
-    }
-
-    protected boolean setWorldExit(UUID target, Location exit)
-    {
-        if(!isTarget(target)) return false;
-
-        for(TrackingDataChangeListener listener : CHANGE_LISTENERS)
-            listener.worldExitChanged(target, exit.getWorld(), getWorldExit(target, exit.getWorld()), exit);
-
-        WORLD_EXITS.get(target).replace(exit.getWorld(), exit);
-        return true;
-    }
-
-
-    //Utility Accessor Methods
-    protected UUID getTargetFromTracker(UUID tracker)
-    {
-        return TRACKING_MAP.get(tracker);
     }
 
     protected Set<UUID> getTrackersFromTarget(UUID target)
@@ -128,12 +79,12 @@ public class TrackingData implements Serializable
 
 
     //Boolean utility methods
-    protected boolean isTracker(UUID tracker)
+    protected boolean isTracker(Entity tracker)
     {
-        return TRACKING_MAP.containsKey(tracker);
+        return
     }
 
-    protected boolean isTarget(UUID target)
+    protected boolean isTarget(Entity target)
     {
         return TARGETS.contains(target);
     }

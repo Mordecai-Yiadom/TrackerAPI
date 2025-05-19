@@ -1,5 +1,6 @@
 package me.krousant.trackerapi;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 
 import java.io.Serializable;
@@ -8,7 +9,6 @@ import java.util.UUID;
 public abstract class TrackerAPIEntity<T extends Entity> implements Serializable
 {
     private UUID ID;
-    private transient T entity;
 
     public TrackerAPIEntity(T entity)
     {
@@ -18,7 +18,7 @@ public abstract class TrackerAPIEntity<T extends Entity> implements Serializable
 
     public T get()
     {
-        return entity;
+        return (T) Bukkit.getEntity(ID);
     }
 
     public UUID id()

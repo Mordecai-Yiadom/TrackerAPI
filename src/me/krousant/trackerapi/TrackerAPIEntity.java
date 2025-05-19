@@ -4,16 +4,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.UUID;
 
 public abstract class TrackerAPIEntity<T extends Entity> implements Serializable
 {
     private UUID ID;
+    private final LinkedList<TrackerAPIEntityChangeListener> CHANGE_LISTENERS;
 
     public TrackerAPIEntity(T entity)
     {
         if(entity  == null) throw new NullPointerException("Entity cannot be null.");
         ID = entity.getUniqueId();
+        CHANGE_LISTENERS = new LinkedList<>();
     }
 
     public T get()
@@ -24,5 +27,27 @@ public abstract class TrackerAPIEntity<T extends Entity> implements Serializable
     public UUID id()
     {
         return ID;
+    }
+
+    public void addChangeListener(TrackerAPIEntityChangeListener listener)
+    {
+        CHANGE_LISTENERS.add(listener);
+    }
+
+    public void removeChangeListener(TrackerAPIEntityChangeListener listener)
+    {
+        CHANGE_LISTENERS.remove(listener);
+    }
+
+    protected void notifyChangeListeners(Object oldValue, Object newValue)
+    {
+        for(TrackerAPIEntityChangeListener listener : CHANGE_LISTENERS)
+            listener.entityChanged(oldValue, newValue);
+    }
+
+    protected void notifyChangeListeners(Object... changes)
+    {
+        for(TrackerAPIEntityChangeListener listener : CHANGE_LISTENERS)
+            listener.entityChanged(changes);
     }
 }

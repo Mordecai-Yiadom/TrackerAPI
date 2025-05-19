@@ -7,7 +7,7 @@ import java.util.*;
 
 public class Target extends TrackerAPIEntity<Entity>
 {
-    private final HashMap<World, Location> WORLD_EXITS;
+    private final HashMap<UUID, Location> WORLD_EXITS;
 
     public Target(Entity entity)
     {
@@ -18,7 +18,7 @@ public class Target extends TrackerAPIEntity<Entity>
     public Location getWorldExitLocation(World world)
     {
         if(world == null) return null;
-        return WORLD_EXITS.get(world);
+        return WORLD_EXITS.get(world.getUID());
     }
 
     //TODO clean up error handling
@@ -26,7 +26,7 @@ public class Target extends TrackerAPIEntity<Entity>
     {
         if(world == null) throw new NullPointerException("World cannot be null.");
 
-        if(WORLD_EXITS.containsKey(world)) WORLD_EXITS.replace(world, location);
-        else WORLD_EXITS.put(world, location);
+        if(WORLD_EXITS.containsKey(world.getUID())) WORLD_EXITS.replace(world.getUID(), location);
+        else WORLD_EXITS.put(world.getUID(), location);
     }
 }

@@ -36,9 +36,9 @@ public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISe
         else registerTrackingDataChangeListener(listener);
     }
 
-    public TrackerAPISettings settings(){return settings;}
-    public Plugin plugin(){return plugin;}
-    public UUID id(){return ID;}
+    public TrackerAPISettings settings() {return settings;}
+    public Plugin plugin() {return plugin;}
+    public UUID id() {return ID;}
 
 
     //TRACKER METHODS

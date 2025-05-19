@@ -5,20 +5,21 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class TrackerAPIManager implements Serializable
 {
-    private final List<TrackerAPI> API_INSTANCES;
+    private final LinkedList<TrackerAPI> API_INSTANCES;
 
     protected TrackerAPIManager()
     {
-        API_INSTANCES = new ArrayList<>();
+        API_INSTANCES = new LinkedList<>();
     }
 
     public TrackerAPI createInstance(Plugin plugin, TrackerAPISettings settings, TrackingDataChangeListener listener)
     {
-        TrackerAPI apiInstance = new TrackerAPI(plugin, settings);
+        TrackerAPI apiInstance = new TrackerAPI(settings);
         API_INSTANCES.add(apiInstance);
         return apiInstance;
     }

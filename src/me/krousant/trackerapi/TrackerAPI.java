@@ -23,7 +23,7 @@ public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISe
     private final TrackerAPISettings settings;
     private final UUID ID;
 
-    protected TrackerAPI(Plugin plugin, TrackerAPISettings settings)
+    protected TrackerAPI(TrackerAPISettings settings)
     {
         super();
         API_INSTANCE = this;

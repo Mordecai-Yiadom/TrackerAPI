@@ -9,7 +9,7 @@ public class Target extends TrackerAPIEntity<Entity>
 {
     private final HashMap<UUID, Location> WORLD_EXITS;
 
-    public Target(Entity entity)
+    protected Target(Entity entity)
     {
         super(entity);
         WORLD_EXITS = new HashMap<>();

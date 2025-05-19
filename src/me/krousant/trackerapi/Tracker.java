@@ -9,7 +9,7 @@ public class Tracker extends TrackerAPIEntity<Player>
     private Target target;
     private final LinkedList<TrackerChangeListener> CHANGE_LISTENERS;
 
-    public Tracker(Player player)
+    protected Tracker(Player player)
     {
         super(player);
         CHANGE_LISTENERS = new LinkedList<>();

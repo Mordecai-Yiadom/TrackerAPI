@@ -1,12 +1,7 @@
 package me.krousant.trackerapi;
 
-import me.krousant.trackerapi.event.listener.TrackingDataChangeListener;
-import org.bukkit.plugin.Plugin;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 public class TrackerAPIManager implements Serializable
 {

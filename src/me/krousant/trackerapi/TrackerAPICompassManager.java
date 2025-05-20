@@ -30,7 +30,7 @@ public abstract class TrackerAPICompassManager
 
         DEFAULT_GENERIC_COMPASS = createDefaultGenericTrackerCompass();
 
-        if(compassValidator == null) this.compassValidator = new DefaultTrackerCompassValidator();
+        if(compassValidator == null) this.compassValidator = new DefaultTrackerCompassValidator(instance);
         else this.compassValidator = compassValidator;
 
         if(genericCompass == null) this.genericCompass = DEFAULT_GENERIC_COMPASS;

@@ -3,6 +3,7 @@ package me.krousant.trackerapi;
 import me.krousant.trackerapi.event.listener.DefaultTrackingDataChangeListener;
 import me.krousant.trackerapi.event.listener.TrackerAPISettingsChangeListener;
 import me.krousant.trackerapi.event.listener.TrackingDataChangeListener;
+import net.md_5.bungee.protocol.packet.ServerLinks;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -12,6 +13,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.UUID;
 
@@ -20,6 +22,7 @@ public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISe
     private final Set<Tracker> TRACKERS;
     private final Set<Target> TARGETS;
 
+    private final LinkedList<TrackerAPIChangeListener> CHANGE_LISTENERS;
     private final TrackerAPISettings settings;
     private final UUID ID;
 
@@ -33,6 +36,8 @@ public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISe
 
         this.settings = settings;
         ID = UUID.randomUUID();
+
+        CHANGE_LISTENERS = new LinkedList<>();
     }
 
     public TrackerAPISettings settings() {return settings;}
@@ -49,13 +54,18 @@ public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISe
         try {tracker = new Tracker(player);}
         catch(NullPointerException ex){return false;}
 
-        return TRACKERS.add(tracker);
+        boolean added = TRACKERS.add(tracker);
+        if(added) notifyTrackerAdded(tracker);
+        return added;
     }
 
     public boolean removeTracker(Tracker tracker)
     {
         if(tracker == null) return false;
-        return TRACKERS.remove(tracker);
+
+        boolean removed = TRACKERS.add(tracker);
+        if(removed) notifyTrackerRemoved(tracker);
+        return removed;
     }
 
     public boolean isTracker(Player player)
@@ -92,13 +102,20 @@ public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISe
         try {target = new Target(entity);}
         catch(NullPointerException ex){return false;}
 
-        return TARGETS.add(target);
+        boolean added = TARGETS.add(target);
+        if(added) notifyTargetAdded(target);
+
+        return added;
     }
 
     public boolean removeTarget(Target target)
     {
         if(target == null) return false;
-        return TARGETS.remove(target);
+
+        boolean removed = TARGETS.add(target);
+        if(removed) notifyTargetRemoved(target);
+
+        return removed;
     }
 
     public boolean isTarget(Entity entity)
@@ -125,9 +142,41 @@ public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISe
     }
 
 
-
     protected void destroy()
-    {}
+    {
+        notifyInstanceDestroyed();
+    }
+
+
+    private void notifyTrackerAdded(Tracker tracker)
+    {
+        for(TrackerAPIChangeListener listener : CHANGE_LISTENERS)
+            listener.trackerAdded(tracker);
+    }
+
+    private void notifyTrackerRemoved(Tracker tracker)
+    {
+        for(TrackerAPIChangeListener listener : CHANGE_LISTENERS)
+            listener.trackerRemoved(tracker);
+    }
+
+    private void notifyTargetAdded(Target target)
+    {
+        for(TrackerAPIChangeListener listener : CHANGE_LISTENERS)
+            listener.targetAdded(target);
+    }
+
+    private void notifyTargetRemoved(Target target)
+    {
+        for(TrackerAPIChangeListener listener : CHANGE_LISTENERS)
+            listener.targetRemoved(target);
+    }
+
+    private void notifyInstanceDestroyed()
+    {
+        for(TrackerAPIChangeListener listener : CHANGE_LISTENERS)
+            listener.instanceDestroyed();
+    }
 
 
     @Override

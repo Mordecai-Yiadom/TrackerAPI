@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class TrackerAPISettings
 {
-    private Map<Option, Boolean> SETTINGS_MAP;
+    private final Map<Option, Boolean> SETTINGS_MAP;
     private final Set<TrackerAPISettingsChangeListener> LISTENERS = new HashSet<>();
 
     private TrackerAPISettings()

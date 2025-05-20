@@ -22,7 +22,7 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
 
     private TrackerAPICompassManager compassManager;
 
-    protected TrackerAPI(TrackerAPISettings settings, TrackerAPICompassManager compassManager)
+    protected TrackerAPI(TrackerAPISettings settings)
     {
         TRACKERS = new HashSet<>();
         TARGETS = new HashSet<>();
@@ -31,13 +31,12 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
         ID = UUID.randomUUID();
 
         CHANGE_LISTENERS = new LinkedList<>();
-
-        this.compassManager = compassManager;
     }
 
     public TrackerAPISettings settings() {return settings;}
     public UUID id() {return ID;}
     public TrackerAPICompassManager compassManager() {return compassManager;}
+    public void setCompassManager(TrackerAPICompassManager compassManager) {this.compassManager = compassManager;}
 
 
     /*******************

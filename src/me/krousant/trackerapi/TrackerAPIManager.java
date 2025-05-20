@@ -12,8 +12,9 @@ public class TrackerAPIManager implements Serializable
         API_INSTANCES = new LinkedList<>();
     }
 
-    public TrackerAPI createInstance(TrackerAPISettings settings, TrackingDataChangeListener listener)
+    public TrackerAPI createInstance(TrackerAPISettings settings)
     {
+        if(settings == null) throw new NullPointerException("TrackerAPISettings cannot be null.");
         TrackerAPI apiInstance = new TrackerAPI(settings);
         API_INSTANCES.add(apiInstance);
         return apiInstance;

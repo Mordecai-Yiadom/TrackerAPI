@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-public abstract class TrackerAPICompassManager implements TrackerAPIChangeListener
+public class TrackerAPICompassManager implements TrackerAPIChangeListener
 {
     private TrackerAPI API_INSTANCE;
     private TrackerCompassValidator compassValidator;
@@ -39,7 +39,6 @@ public abstract class TrackerAPICompassManager implements TrackerAPIChangeListen
 
         API_INSTANCE.addChangeListener(this);
     }
-
 
     public boolean giveTrackerCompass(Player player)
     {
@@ -114,21 +113,27 @@ public abstract class TrackerAPICompassManager implements TrackerAPIChangeListen
     @Override
     public void trackerAdded(Tracker tracker)
     {
-        Player trackerPlayer = tracker.get();
-        if(trackerPlayer == null) return;
+        if(API_INSTANCE.settings().get(TrackerAPISettings.Option.GIVE_COMPASS_ON_ADD))
+        {
+            Player trackerPlayer = tracker.get();
+            if(trackerPlayer == null) return;
 
-        if(!hasTrackerCompass(trackerPlayer))
-            giveTrackerCompass(trackerPlayer);
+            if(!hasTrackerCompass(trackerPlayer))
+                giveTrackerCompass(trackerPlayer);
+        }
     }
 
     @Override
     public void trackerRemoved(Tracker tracker)
     {
-        Player trackerPlayer = tracker.get();
-        if(trackerPlayer == null) return;
+        if(API_INSTANCE.settings().get(TrackerAPISettings.Option.REMOVE_COMPASS_ON_REMOVE))
+        {
+            Player trackerPlayer = tracker.get();
+            if(trackerPlayer == null) return;
 
-        if(hasTrackerCompass(trackerPlayer))
-            removeTrackerCompass(trackerPlayer);
+            if(hasTrackerCompass(trackerPlayer))
+                removeTrackerCompass(trackerPlayer);
+        }
     }
 
     @Override
@@ -137,7 +142,11 @@ public abstract class TrackerAPICompassManager implements TrackerAPIChangeListen
 
     @Override
     public void targetRemoved(Target target)
-    {}
+    {
+        for(Tracker tracker : API_INSTANCE.getTrackers())
+            if(tracker.getTarget().equals(target))
+                tracker.setTarget(null);
+    }
 
     @Override
     public void instanceDestroyed()

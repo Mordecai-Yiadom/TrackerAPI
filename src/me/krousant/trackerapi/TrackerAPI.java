@@ -17,7 +17,7 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.UUID;
 
-public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISettingsChangeListener, Serializable
+public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializable
 {
     private final Set<Tracker> TRACKERS;
     private final Set<Target> TARGETS;
@@ -28,9 +28,6 @@ public class TrackerAPI extends TrackerAPICompassManager implements TrackerAPISe
 
     protected TrackerAPI(TrackerAPISettings settings)
     {
-        super();
-        API_INSTANCE = this;
-
         TRACKERS = new HashSet<>();
         TARGETS = new HashSet<>();
 

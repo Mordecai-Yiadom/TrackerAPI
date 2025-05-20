@@ -20,7 +20,9 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
     private final TrackerAPISettings settings;
     private final UUID ID;
 
-    protected TrackerAPI(TrackerAPISettings settings)
+    private TrackerAPICompassManager compassManager;
+
+    protected TrackerAPI(TrackerAPISettings settings, TrackerAPICompassManager compassManager)
     {
         TRACKERS = new HashSet<>();
         TARGETS = new HashSet<>();
@@ -29,10 +31,13 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
         ID = UUID.randomUUID();
 
         CHANGE_LISTENERS = new LinkedList<>();
+
+        this.compassManager = compassManager;
     }
 
     public TrackerAPISettings settings() {return settings;}
     public UUID id() {return ID;}
+    public TrackerAPICompassManager compassManager() {return compassManager;}
 
 
     /*******************
@@ -132,6 +137,12 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
         return (HashSet<Target>) ((HashSet<Target>) TARGETS).clone();
     }
 
+    public boolean isInSameWorld(Player p1, Player p2)
+    {
+        if(p1 == null || p2 == null)
+            throw new NullPointerException("Tracker or Target cannot be null");
+        return p1.getWorld().equals(p2.getWorld());
+    }
 
     protected void destroy()
     {

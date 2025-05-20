@@ -3,6 +3,7 @@ package me.krousant.trackerapi;
 import me.krousant.trackerapi.event.action.CompassAction;
 import me.krousant.trackerapi.event.action.NullCompassAction;
 import me.krousant.trackerapi.event.listener.CompassActionListener;
+import me.krousant.trackerapi.event.listener.TrackerAPIChangeListener;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-public abstract class TrackerAPICompassManager
+public abstract class TrackerAPICompassManager implements TrackerAPIChangeListener
 {
     private TrackerAPI API_INSTANCE;
     private TrackerCompassValidator compassValidator;
@@ -26,7 +27,7 @@ public abstract class TrackerAPICompassManager
                                     ItemStack genericCompass)
     {
         if(instance == null) throw new NullPointerException("TrackerAPI cannot be null.");
-        this.API_INSTANCE = instance;
+        API_INSTANCE = instance;
 
         DEFAULT_GENERIC_COMPASS = createDefaultGenericTrackerCompass();
 
@@ -35,6 +36,8 @@ public abstract class TrackerAPICompassManager
 
         if(genericCompass == null) this.genericCompass = DEFAULT_GENERIC_COMPASS;
         else this.genericCompass = genericCompass;
+
+        API_INSTANCE.addChangeListener(this);
     }
 
 
@@ -108,6 +111,41 @@ public abstract class TrackerAPICompassManager
         return compass;
     }
 
+    @Override
+    public void trackerAdded(Tracker tracker)
+    {
+        Player trackerPlayer = tracker.get();
+        if(trackerPlayer == null) return;
+
+        if(!hasTrackerCompass(trackerPlayer))
+            giveTrackerCompass(trackerPlayer);
+    }
+
+    @Override
+    public void trackerRemoved(Tracker tracker)
+    {
+        Player trackerPlayer = tracker.get();
+        if(trackerPlayer == null) return;
+
+        if(hasTrackerCompass(trackerPlayer))
+            removeTrackerCompass(trackerPlayer);
+    }
+
+    @Override
+    public void targetAdded(Target target)
+    {}
+
+    @Override
+    public void targetRemoved(Target target)
+    {}
+
+    @Override
+    public void instanceDestroyed()
+    {}
+
+
+
+
     private static class DefaultTrackerCompassValidator implements TrackerCompassValidator
     {
         private TrackerAPI instance;
@@ -125,12 +163,8 @@ public abstract class TrackerAPICompassManager
             {
                 if(itemStack.getItemMeta().hasLore())
                 {
-                    try
-                    {
-                        if(itemStack.getItemMeta().getLore().getFirst().equals(instance.id().toString()))
-                            return true;
-                    }
-                    catch(NoSuchElementException ex){}
+                    if(itemStack.getItemMeta().getLore().contains(instance.id().toString()))
+                        return true;
                 }
             }
             return false;

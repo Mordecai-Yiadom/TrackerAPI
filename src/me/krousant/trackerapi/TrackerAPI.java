@@ -1,5 +1,6 @@
 package me.krousant.trackerapi;
 
+import me.krousant.trackerapi.event.listener.TrackerAPIChangeListener;
 import me.krousant.trackerapi.event.listener.TrackerAPISettingsChangeListener;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

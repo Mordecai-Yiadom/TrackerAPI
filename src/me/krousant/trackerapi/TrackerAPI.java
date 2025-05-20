@@ -81,6 +81,17 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
         return false;
     }
 
+    public Tracker getPlayerAsTracker(Player player)
+    {
+        if(player == null) throw new NullPointerException("Player cannot be null.");
+
+        for(Tracker tracker : getTrackers())
+            if(tracker.get().equals(player))
+                return tracker;
+        return null;
+    }
+
+
     public Set<Tracker> getTrackers()
     {
         return (HashSet<Tracker>) ((HashSet<Tracker>) TRACKERS).clone();
@@ -131,16 +142,27 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
         return false;
     }
 
+    public Target getEntityAsTarget(Entity entity)
+    {
+        if(entity == null) throw new NullPointerException("Entity cannot be null.");
+
+        for(Target target : getTargets())
+            if(target.get().equals(entity))
+                return target;
+        return null;
+    }
+
+
     public Set<Target> getTargets()
     {
         return (HashSet<Target>) ((HashSet<Target>) TARGETS).clone();
     }
 
-    public boolean isInSameWorld(Player p1, Player p2)
+    public boolean isInSameWorld(Entity e1, Entity e2)
     {
-        if(p1 == null || p2 == null)
-            throw new NullPointerException("Tracker or Target cannot be null");
-        return p1.getWorld().equals(p2.getWorld());
+        if(e1 == null || e2 == null)
+            throw new NullPointerException("Entities cannot be null");
+        return e1.getWorld().equals(e2.getWorld());
     }
 
     protected void destroy()

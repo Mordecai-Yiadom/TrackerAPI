@@ -1,4 +1,4 @@
-package me.krousant.trackerapi.event.executor;
+package me.krousant.trackerapi.event.executor.defaults;
 
 import me.krousant.trackerapi.Tracker;
 import me.krousant.trackerapi.TrackerAPI;
@@ -8,9 +8,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.EventExecutor;
 
-public class AutoTrackMovementExecutor implements EventExecutor
+public class OnTargetMove implements EventExecutor
 {
     private TrackerAPI instance;
+
     @Override
     public void execute(Listener listener, Event event)
     {
@@ -25,7 +26,6 @@ public class AutoTrackMovementExecutor implements EventExecutor
 
             if(instance.isInSameWorld(tracker.get(), player))
                 instance.compassManager().setTrackerCompassTarget(tracker.get(), playerMoveEvent.getTo());
-
         }
     }
 }

@@ -9,6 +9,7 @@ public class NullCompassAction implements CompassActionListener
 {
     public static final NullCompassAction INSTANCE = new NullCompassAction();
     private NullCompassAction(){}
+
     @Override
-    public void actionPerformed(TrackerAPI apiInstance, PlayerEvent event) {}
+    public void actionPerformed(TrackerAPI apiInstance, Event event) {}
 }

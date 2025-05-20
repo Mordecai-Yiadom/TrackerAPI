@@ -8,5 +8,5 @@ import java.io.Serializable;
 
 public interface CompassActionListener extends Serializable
 {
-    void actionPerformed(TrackerAPI apiInstance, PlayerEvent event);
+    void actionPerformed(TrackerAPI apiInstance, Event event);
 }

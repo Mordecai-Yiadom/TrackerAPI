@@ -144,6 +144,15 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
         notifyInstanceDestroyed();
     }
 
+    public void addChangeListener(TrackerAPIChangeListener listener)
+    {
+        CHANGE_LISTENERS.add(listener);
+    }
+
+    public void removeChangeListener(TrackerAPIChangeListener listener)
+    {
+        CHANGE_LISTENERS.remove(listener);
+    }
 
     private void notifyTrackerAdded(Tracker tracker)
     {

@@ -4,10 +4,10 @@ import me.krousant.trackerapi.*;
 import me.krousant.trackerapi.event.listener.CompassActionListener;
 import org.bukkit.event.Event;
 
-public class NullAction implements CompassActionListener
+public class NullCompassAction implements CompassActionListener
 {
-    public static final NullAction GET = new NullAction();
-    private NullAction(){}
+    public static final NullCompassAction INSTANCE = new NullCompassAction();
+    private NullCompassAction(){}
     @Override
     public void actionPerformed(TrackerAPI apiInstance, Event event) {}
 }

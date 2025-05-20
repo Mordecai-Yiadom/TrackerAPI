@@ -22,7 +22,7 @@ public class TrackNearestTarget implements CompassActionListener
         for(Target target : instance.getTargets())
         {
             if(target.get() == null) continue;
-            if(instance.isInSameWorld(target.get(), tracker.get())) continue;
+            if(!instance.isInSameWorld(target.get(), tracker.get())) continue;
 
             currdistance = tracker.get().getLocation().distance(target.get().getLocation());
 
@@ -32,5 +32,8 @@ public class TrackNearestTarget implements CompassActionListener
                 distanceToNearestTarget = currdistance;
             }
         }
+
+        tracker.setTarget(nearestTarget);
+        instance.compassManager().setTrackerCompassTarget(tracker.get(), nearestTarget.get().getLocation());
     }
 }

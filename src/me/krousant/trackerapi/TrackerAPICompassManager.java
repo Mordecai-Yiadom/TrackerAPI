@@ -99,7 +99,8 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
 
     public void sendCompassMessage(Tracker tracker, String message)
     {
-        if(tracker.get() == null || message == null) return;
+        if(tracker.get() == null || message == null ||
+                !API_INSTANCE.settings().get(TrackerAPISettings.Option.ENABLE_COMPASS_MESSAGES)) return;
 
         tracker.get().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
     }

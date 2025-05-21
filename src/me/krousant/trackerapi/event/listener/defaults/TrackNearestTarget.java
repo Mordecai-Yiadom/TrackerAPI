@@ -4,6 +4,7 @@ import me.krousant.trackerapi.Target;
 import me.krousant.trackerapi.Tracker;
 import me.krousant.trackerapi.TrackerAPI;
 import me.krousant.trackerapi.event.listener.CompassActionListener;
+import org.bukkit.ChatColor;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -40,7 +41,16 @@ public class TrackNearestTarget implements CompassActionListener
             }
         }
 
+        if(nearestTarget == null)
+        {
+            instance.compassManager().sendCompassMessage(tracker,
+                    ChatColor.RED + "Unable find entities to track");
+            return;
+        }
+
         tracker.setTarget(nearestTarget);
-        instance.compassManager().setTrackerCompassTarget(tracker.get(), nearestTarget.get().getLocation());
+        instance.compassManager().setTrackerCompassTarget(tracker, nearestTarget.get().getLocation());
+        instance.compassManager().sendCompassMessage(tracker,
+                ChatColor.GREEN + "Now tracking " + nearestTarget.get().getName());
     }
 }

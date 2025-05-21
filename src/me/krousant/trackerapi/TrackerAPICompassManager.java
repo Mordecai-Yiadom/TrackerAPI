@@ -4,6 +4,8 @@ import me.krousant.trackerapi.event.action.CompassAction;
 import me.krousant.trackerapi.event.action.NullCompassAction;
 import me.krousant.trackerapi.event.listener.CompassActionListener;
 import me.krousant.trackerapi.event.listener.TrackerAPIChangeListener;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -95,6 +97,13 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
         return true;
     }
 
+    public void sendCompassMessage(Tracker tracker, String message)
+    {
+        if(tracker.get() == null || message == null) return;
+
+        tracker.get().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+    }
+
     private ItemStack createDefaultGenericTrackerCompass()
     {
         ItemStack compass = new ItemStack(Material.COMPASS);
@@ -153,9 +162,6 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
     @Override
     public void instanceDestroyed()
     {}
-
-
-
 
     private static class DefaultTrackerCompassValidator implements TrackerCompassValidator
     {

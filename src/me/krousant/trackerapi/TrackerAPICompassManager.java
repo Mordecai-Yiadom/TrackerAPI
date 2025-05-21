@@ -81,9 +81,11 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
         return DEFAULT_GENERIC_COMPASS.clone();
     }
 
-    public boolean setTrackerCompassTarget(Player tracker, Location location)
+    public boolean setTrackerCompassTarget(Tracker tracker, Location location)
     {
-        ItemStack compass = getTrackerCompassFromInventory(tracker.getInventory());
+        if(tracker.get() == null) return false;
+
+        ItemStack compass = getTrackerCompassFromInventory(tracker.get().getInventory());
         if(compass == null) return false;
 
         CompassMeta compassMeta = (CompassMeta) compass.getItemMeta();

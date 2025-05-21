@@ -22,10 +22,10 @@ public class OnTargetMove implements EventExecutor
 
         for(Tracker tracker : instance.getTrackers())
         {
-            if(tracker.get() == null) continue;
+            if(tracker.get() == null || !tracker.getTarget().get().equals(player)) continue;
 
             if(instance.isInSameWorld(tracker.get(), player))
-                instance.compassManager().setTrackerCompassTarget(tracker.get(), playerMoveEvent.getTo());
+                instance.compassManager().setTrackerCompassTarget(tracker, playerMoveEvent.getTo());
         }
     }
 }

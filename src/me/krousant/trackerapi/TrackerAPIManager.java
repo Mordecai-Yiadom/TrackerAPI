@@ -6,8 +6,9 @@ import java.util.LinkedList;
 public class TrackerAPIManager implements Serializable
 {
     private final LinkedList<TrackerAPI> API_INSTANCES;
+    private static final TrackerAPIManager INSTANCE = new TrackerAPIManager();
 
-    protected TrackerAPIManager()
+    private TrackerAPIManager()
     {
         API_INSTANCES = new LinkedList<>();
     }
@@ -25,4 +26,10 @@ public class TrackerAPIManager implements Serializable
         apiInstance.destroy();
         return API_INSTANCES.remove(apiInstance);
     }
+
+    public TrackerAPIManager instance()
+    {
+        return INSTANCE;
+    }
+
 }

@@ -15,7 +15,6 @@ public abstract class TrackerAPIEventExecutor implements EventExecutor
         this.API_INSTANCE = instance;
     }
 
-
     @Override
     public abstract void execute(Listener listener, Event event);
 }

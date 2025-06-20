@@ -3,6 +3,7 @@ package me.krousant.trackerapi;
 import me.krousant.trackerapi.event.action.CompassAction;
 import me.krousant.trackerapi.event.action.NullCompassAction;
 import me.krousant.trackerapi.event.listener.CompassActionListener;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;

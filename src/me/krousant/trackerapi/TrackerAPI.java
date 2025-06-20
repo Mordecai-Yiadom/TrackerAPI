@@ -2,6 +2,7 @@ package me.krousant.trackerapi;
 
 import me.krousant.trackerapi.event.listener.TrackerAPIChangeListener;
 import me.krousant.trackerapi.event.listener.TrackerAPISettingsChangeListener;
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
@@ -164,6 +165,14 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
             throw new NullPointerException("Entities cannot be null");
         return e1.getWorld().equals(e2.getWorld());
     }
+
+    public boolean isInSameWorld(Entity entity, Location location)
+    {
+        if(entity == null || location == null)
+            throw new NullPointerException("Entity or Location cannot be null");
+        return entity.getWorld().equals(location.getWorld());
+    }
+
 
     protected void destroy()
     {

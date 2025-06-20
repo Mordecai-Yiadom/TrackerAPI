@@ -7,18 +7,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.plugin.EventExecutor;
 
-public class OnTargetMove extends TrackerAPIEventExecutor
+public class OnTargetWorldChange extends TrackerAPIEventExecutor
 {
-    public OnTargetMove(TrackerAPI instance) {super(instance);}
+    public OnTargetWorldChange(TrackerAPI instance){super(instance);}
 
     @Override
     public void execute(Listener listener, Event event)
     {
-        PlayerMoveEvent playerMoveEvent  = (PlayerMoveEvent) event;
+        PlayerPortalEvent portalEvent  = (PlayerPortalEvent) event;
 
-        Player player = playerMoveEvent.getPlayer();
+        Player player = portalEvent.getPlayer();
         if(!API_INSTANCE.isTarget(player)) return;
 
         for(Tracker tracker : API_INSTANCE.getTrackers())
@@ -26,11 +27,12 @@ public class OnTargetMove extends TrackerAPIEventExecutor
             if(tracker.get() == null) continue;
             if(!tracker.getTarget().get().equals(player)) continue;
 
-            if(API_INSTANCE.isInSameWorld(tracker.get(), player))
+            if(API_INSTANCE.isInSameWorld(tracker.get(), portalEvent.getFrom()))
             {
-                API_INSTANCE.compassManager().setTrackerCompassTarget(tracker, playerMoveEvent.getTo());
+                API_INSTANCE.compassManager().setTrackerCompassTarget(tracker, portalEvent.getFrom());
+                API_INSTANCE.getEntityAsTarget(portalEvent.getPlayer())
+                        .setWorldExitLocation(portalEvent.getFrom().getWorld(), portalEvent.getFrom());
             }
-
         }
     }
 }

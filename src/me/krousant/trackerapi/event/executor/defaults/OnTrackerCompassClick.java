@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 public class OnTrackerCompassClick extends TrackerAPIEventExecutor
 {
     public OnTrackerCompassClick(TrackerAPI instance) {super(instance);}
+
     @Override
     public void execute(Listener listener, Event event)
     {

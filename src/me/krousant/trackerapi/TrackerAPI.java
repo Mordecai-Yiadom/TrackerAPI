@@ -1,16 +1,20 @@
 package me.krousant.trackerapi;
 
+import me.krousant.trackerapi.event.executor.TrackerAPIEventExecutor;
+import me.krousant.trackerapi.event.executor.defaults.OnTargetMove;
+import me.krousant.trackerapi.event.executor.defaults.OnTargetWorldChange;
 import me.krousant.trackerapi.event.listener.TrackerAPIChangeListener;
 import me.krousant.trackerapi.event.listener.TrackerAPISettingsChangeListener;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.entity.EntityPortalEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.plugin.RegisteredListener;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializable
 {
@@ -20,6 +24,7 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
     private final LinkedList<TrackerAPIChangeListener> CHANGE_LISTENERS;
     private final TrackerAPISettings settings;
     private final UUID ID;
+    private final ArrayList<TrackerAPIEventExecutor> ACTIVE_EVENT_EXECUTORS;
 
     private TrackerAPICompassManager compassManager;
 
@@ -32,6 +37,9 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
         ID = UUID.randomUUID();
 
         CHANGE_LISTENERS = new LinkedList<>();
+        ACTIVE_EVENT_EXECUTORS = new ArrayList<>();
+
+        registerDefaultExecutors();
     }
 
     public TrackerAPISettings settings() {return settings;}
@@ -176,6 +184,9 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
 
     protected void destroy()
     {
+        for(TrackerAPIEventExecutor eventExecutor : ACTIVE_EVENT_EXECUTORS)
+            eventExecutor.handlerList().unregister(eventExecutor.registeredListener());
+
         notifyInstanceDestroyed();
     }
 
@@ -219,6 +230,48 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
             listener.instanceDestroyed();
     }
 
+    public void registerEventExecutor(TrackerAPIEventExecutor eventExecutor)
+    {
+        if(eventExecutor == null) return;
+
+        eventExecutor.handlerList().register(eventExecutor.registeredListener());
+        ACTIVE_EVENT_EXECUTORS.add(eventExecutor);
+    }
+
+    public void unregisterEventExecutor(TrackerAPIEventExecutor eventExecutor)
+    {
+        if(eventExecutor == null) return;
+
+        eventExecutor.handlerList().unregister(eventExecutor.registeredListener());
+        ACTIVE_EVENT_EXECUTORS.remove(eventExecutor);
+    }
+
+    public void unregisterEventExecutors(HandlerList handlerList)
+    {
+        if(handlerList == null) return;
+
+        for(TrackerAPIEventExecutor executor : ACTIVE_EVENT_EXECUTORS.toArray(new TrackerAPIEventExecutor[0]))
+            if(executor.handlerList().equals(handlerList))
+            {
+                executor.handlerList().unregister(executor.registeredListener());
+                ACTIVE_EVENT_EXECUTORS.remove(executor);
+            }
+    }
+
+    private void registerDefaultExecutors()
+    {
+        if(this.settings().get(TrackerAPISettings.Option.AUTO_TRACK_MOVEMENT))
+            registerEventExecutor(new OnTargetMove(this));
+
+        if(this.settings().get(TrackerAPISettings.Option.AUTO_TRACK_WORLD_EXITS))
+            registerEventExecutor(new OnTargetWorldChange(this));
+
+        if(this.settings().get(TrackerAPISettings.Option.DROP_COMPASS_ON_DEATH))
+            registerEventExecutor(null);
+
+        if(this.settings().get(TrackerAPISettings.Option.DROPPABLE_COMPASS))
+            registerEventExecutor(null);
+    }
 
     @Override
     public void settingChanged(TrackerAPISettings.Option option, boolean oldValue, boolean newValue)
@@ -226,5 +279,24 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
         if(settings.get(TrackerAPISettings.Option.ENABLE_DEBUG_MODE))
             TrackerAPIPlugin.sendConsoleMessage(TrackerAPIPlugin.ConsoleMessageType.NEUTRAL,
                     "Settings have changed.", ID);
+
+        switch(option)
+        {
+            case AUTO_TRACK_MOVEMENT:
+                if(newValue) registerEventExecutor(new OnTargetMove(this));
+                else unregisterEventExecutors(PlayerMoveEvent.getHandlerList());
+
+            case AUTO_TRACK_WORLD_EXITS:
+                if(newValue) registerEventExecutor(new OnTargetWorldChange(this));
+                else unregisterEventExecutors(EntityPortalEvent.getHandlerList());
+
+            case DROPPABLE_COMPASS:
+                if(newValue) registerEventExecutor(null);
+                else unregisterEventExecutor(null);
+
+            case DROP_COMPASS_ON_DEATH:
+                if(newValue) registerEventExecutor(null);
+                else unregisterEventExecutor(null);
+        }
     }
 }

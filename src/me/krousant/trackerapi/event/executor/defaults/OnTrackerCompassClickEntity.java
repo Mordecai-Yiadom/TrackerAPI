@@ -5,12 +5,16 @@ import me.krousant.trackerapi.TrackerAPI;
 import me.krousant.trackerapi.event.action.CompassAction;
 import me.krousant.trackerapi.event.executor.TrackerAPIEventExecutor;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
 public class OnTrackerCompassClickEntity extends TrackerAPIEventExecutor
 {
-    public OnTrackerCompassClickEntity(TrackerAPI instance) {super(instance);}
+    public OnTrackerCompassClickEntity(TrackerAPI instance)
+    {
+        super(instance, PlayerInteractEntityEvent.getHandlerList(), EventPriority.NORMAL, true);
+    }
 
     @Override
     public void execute(Listener listener, Event event)

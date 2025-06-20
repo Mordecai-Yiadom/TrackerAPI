@@ -1,6 +1,7 @@
 package me.krousant.trackerapi;
 
 import org.bukkit.*;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.command.*;
 
@@ -8,6 +9,8 @@ import java.util.UUID;
 
 public class TrackerAPIPlugin extends JavaPlugin
 {
+    public static final Plugin PLUGIN = Bukkit.getPluginManager().getPlugin("TrackerAPI");
+
     @Override
     public void onEnable()
     {

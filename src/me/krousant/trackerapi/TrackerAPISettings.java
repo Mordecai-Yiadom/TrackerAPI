@@ -58,7 +58,7 @@ public class TrackerAPISettings
     //All Values are false by default
     public enum Option
     {
-        AUTO_TRACK_MOVEMENT,
+        AUTO_TRACK_MOVEMENT, // <---- Currently only Players are supported
         AUTO_TRACK_WORLD_EXITS,
         ENABLE_COMPASS_MESSAGES,
         DESTROY_COMPASSES_WHEN_FINISHED,

@@ -19,7 +19,7 @@ public class TrackerAPISettings
         for(Option option : Option.values()) SETTINGS_MAP.put(option, false);
     }
 
-    private static TrackerAPISettings build()
+    public static TrackerAPISettings build()
     {
         return new TrackerAPISettings();
     }

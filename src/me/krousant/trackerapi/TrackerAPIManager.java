@@ -5,15 +5,9 @@ import java.util.LinkedList;
 
 public class TrackerAPIManager implements Serializable
 {
-    private final LinkedList<TrackerAPI> API_INSTANCES;
-    private static final TrackerAPIManager INSTANCE = new TrackerAPIManager();
+    private static final LinkedList<TrackerAPI> API_INSTANCES = new LinkedList<>();;
 
-    private TrackerAPIManager()
-    {
-        API_INSTANCES = new LinkedList<>();
-    }
-
-    public TrackerAPI createInstance(TrackerAPISettings settings)
+    public static TrackerAPI createInstance(TrackerAPISettings settings)
     {
         if(settings == null) throw new NullPointerException("TrackerAPISettings cannot be null.");
         TrackerAPI apiInstance = new TrackerAPI(settings);
@@ -21,15 +15,9 @@ public class TrackerAPIManager implements Serializable
         return apiInstance;
     }
 
-    public boolean destroyInstance(TrackerAPI apiInstance)
+    public static boolean destroyInstance(TrackerAPI apiInstance)
     {
         apiInstance.destroy();
         return API_INSTANCES.remove(apiInstance);
     }
-
-    public TrackerAPIManager instance()
-    {
-        return INSTANCE;
-    }
-
 }

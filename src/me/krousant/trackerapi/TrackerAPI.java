@@ -30,13 +30,18 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
 
     private TrackerAPICompassManager compassManager;
 
-    protected TrackerAPI(TrackerAPISettings settings)
+    protected TrackerAPI(TrackerAPISettings settings, TrackerAPICompassManager compassManager)
     {
         TRACKERS = new HashSet<>();
         TARGETS = new HashSet<>();
 
         this.settings = settings;
         ID = UUID.randomUUID();
+
+        if(compassManager == null)
+            setCompassManager(new TrackerAPICompassManager(this, null,
+                    null, null));
+        else setCompassManager(compassManager);
 
         CHANGE_LISTENERS = new LinkedList<>();
         ACTIVE_EVENT_EXECUTORS = new ArrayList<>();

@@ -26,12 +26,14 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
     private final ItemStack DEFAULT_GENERIC_COMPASS;
 
     public TrackerAPICompassManager(TrackerAPI instance, TrackerCompassValidator compassValidator,
-                                    ItemStack genericCompass)
+                                    ItemStack genericCompass, String defaultGenericCompassName)
     {
         if(instance == null) throw new NullPointerException("TrackerAPI cannot be null.");
         API_INSTANCE = instance;
 
-        DEFAULT_GENERIC_COMPASS = createDefaultGenericTrackerCompass();
+        if(defaultGenericCompassName == null)
+            DEFAULT_GENERIC_COMPASS = createDefaultGenericTrackerCompass(ChatColor.GOLD + "Tracker Compass");
+        else DEFAULT_GENERIC_COMPASS = createDefaultGenericTrackerCompass(defaultGenericCompassName);
 
         if(compassValidator == null) this.compassValidator = new DefaultTrackerCompassValidator(instance);
         else this.compassValidator = compassValidator;
@@ -41,6 +43,7 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
 
         API_INSTANCE.addChangeListener(this);
     }
+
 
     public boolean giveTrackerCompass(Player player)
     {
@@ -80,7 +83,7 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
 
     public ItemStack getTrackerCompass()
     {
-        return DEFAULT_GENERIC_COMPASS.clone();
+        return genericCompass.clone();
     }
 
     public boolean setTrackerCompassTarget(Tracker tracker, Location location)
@@ -106,7 +109,7 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
         tracker.get().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
     }
 
-    private ItemStack createDefaultGenericTrackerCompass()
+    private ItemStack createDefaultGenericTrackerCompass(String displayName)
     {
         ItemStack compass = new ItemStack(Material.COMPASS);
 
@@ -114,7 +117,8 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
         lore.add(API_INSTANCE.id().toString());
 
         CompassMeta compassMeta = (CompassMeta) compass.getItemMeta();
-        compassMeta.setDisplayName(ChatColor.GOLD + "Tracker Compass");
+
+        compassMeta.setDisplayName(displayName);
         compassMeta.setLore(lore);
         compassMeta.setLodestoneTracked(true);
 

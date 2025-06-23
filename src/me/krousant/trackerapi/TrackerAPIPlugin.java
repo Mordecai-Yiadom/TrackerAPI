@@ -21,6 +21,7 @@ public class TrackerAPIPlugin extends JavaPlugin
     @Override
     public void onDisable()
     {
+        TrackerAPIManager.clearInstances();
         sendConsoleMessage(ConsoleMessageType.NEUTRAL, "TrackerAPI has been disabled.", null);
     }
 

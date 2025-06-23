@@ -32,11 +32,11 @@ public class TrackerAPIPlugin extends JavaPlugin
     }
 
     //Convenience Methods(s) for Plugin
-    public static void sendConsoleMessage(ConsoleMessageType messageType, String message, UUID instanceID)
+    public static void sendConsoleMessage(ConsoleMessageType messageType, String message, String instanceID)
     {
         if(message == null) return;
 
-        String id = (instanceID == null) ? "" : "|ID: " + instanceID.toString() + "|";
+        String id = (instanceID == null) ? "" : "|ID: " + instanceID + "|";
 
         Bukkit.getConsoleSender()
                 .sendMessage(String.format("%s[TrackerAPI] %s (%s): %s", messageType.color, id, messageType.prefix, message));

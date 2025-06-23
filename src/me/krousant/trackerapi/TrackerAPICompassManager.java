@@ -114,7 +114,7 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
         ItemStack compass = new ItemStack(Material.COMPASS);
 
         List<String> lore = new ArrayList<>();
-        lore.add(API_INSTANCE.id().toString());
+        lore.add(ChatColor.MAGIC + API_INSTANCE.id());
 
         CompassMeta compassMeta = (CompassMeta) compass.getItemMeta();
 
@@ -186,7 +186,7 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
             {
                 if(itemStack.getItemMeta().hasLore())
                 {
-                    if(itemStack.getItemMeta().getLore().contains(instance.id().toString()))
+                    if(itemStack.getItemMeta().getLore().contains(ChatColor.MAGIC + instance.id()))
                         return true;
                 }
             }

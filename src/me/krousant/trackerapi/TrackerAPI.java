@@ -25,7 +25,7 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
 
     private final LinkedList<TrackerAPIChangeListener> CHANGE_LISTENERS;
     private final TrackerAPISettings settings;
-    private final UUID ID;
+    private final String ID;
     private final ArrayList<TrackerAPIEventExecutor> ACTIVE_EVENT_EXECUTORS;
 
     private TrackerAPICompassManager compassManager;
@@ -36,21 +36,21 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
         TARGETS = new HashSet<>();
 
         this.settings = settings;
-        ID = UUID.randomUUID();
+        ID = TrackerAPIManager.generateInstanceID();
+
+        CHANGE_LISTENERS = new LinkedList<>();
+        ACTIVE_EVENT_EXECUTORS = new ArrayList<>();
 
         if(compassManager == null)
             setCompassManager(new TrackerAPICompassManager(this, null,
                     null, null));
         else setCompassManager(compassManager);
 
-        CHANGE_LISTENERS = new LinkedList<>();
-        ACTIVE_EVENT_EXECUTORS = new ArrayList<>();
-
         registerDefaultExecutors();
     }
 
     public TrackerAPISettings settings() {return settings;}
-    public UUID id() {return ID;}
+    public String id() {return ID;}
     public TrackerAPICompassManager compassManager() {return compassManager;}
     public void setCompassManager(TrackerAPICompassManager compassManager) {this.compassManager = compassManager;}
 

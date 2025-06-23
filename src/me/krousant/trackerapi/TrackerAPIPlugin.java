@@ -9,12 +9,13 @@ import java.util.UUID;
 
 public class TrackerAPIPlugin extends JavaPlugin
 {
-    public static final Plugin PLUGIN = Bukkit.getPluginManager().getPlugin("TrackerAPI");
+    private static Plugin PLUGIN;
 
     @Override
     public void onEnable()
     {
         sendConsoleMessage(ConsoleMessageType.SUCCESS, "TrackerAPI has been enabled.", null);
+        PLUGIN = Bukkit.getPluginManager().getPlugin("TrackerAPI");
     }
 
     @Override
@@ -60,5 +61,10 @@ public class TrackerAPIPlugin extends JavaPlugin
     protected static void saveInstance()
     {
 
+    }
+
+    public static Plugin plugin()
+    {
+        return PLUGIN;
     }
 }

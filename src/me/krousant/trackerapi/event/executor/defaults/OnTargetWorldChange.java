@@ -3,6 +3,7 @@ package me.krousant.trackerapi.event.executor.defaults;
 import me.krousant.trackerapi.Tracker;
 import me.krousant.trackerapi.TrackerAPI;
 import me.krousant.trackerapi.event.executor.TrackerAPIEventExecutor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -12,32 +13,67 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.plugin.EventExecutor;
 
-public class OnTargetWorldChange extends TrackerAPIEventExecutor
+public class OnTargetWorldChange
 {
-    public OnTargetWorldChange(TrackerAPI instance)
+    public static class Player extends TrackerAPIEventExecutor
     {
-        super(instance, EntityPortalEvent.getHandlerList(), EventPriority.NORMAL, true);
-    }
-
-    @Override
-    public void execute(Listener listener, Event event)
-    {
-        PlayerPortalEvent portalEvent  = (PlayerPortalEvent) event;
-
-        Player player = portalEvent.getPlayer();
-        if(!API_INSTANCE.isTarget(player)) return;
-
-        for(Tracker tracker : API_INSTANCE.getTrackers())
+        public Player(TrackerAPI instance)
         {
-            if(tracker.get() == null) continue;
-            if(!tracker.getTarget().get().equals(player)) continue;
+            super(instance, PlayerPortalEvent.getHandlerList(), EventPriority.NORMAL, true);
+        }
 
-            if(API_INSTANCE.isInSameWorld(tracker.get(), portalEvent.getFrom()))
+        @Override
+        public void execute(Listener listener, Event event)
+        {
+            PlayerPortalEvent portalEvent  = (PlayerPortalEvent) event;
+
+            org.bukkit.entity.Player target = portalEvent.getPlayer();
+            if(!API_INSTANCE.isTarget(target)) return;
+
+            for(Tracker tracker : API_INSTANCE.getTrackers())
             {
-                API_INSTANCE.compassManager().setTrackerCompassTarget(tracker, portalEvent.getFrom());
-                API_INSTANCE.getEntityAsTarget(portalEvent.getPlayer())
-                        .setWorldExitLocation(portalEvent.getFrom().getWorld(), portalEvent.getFrom());
+                if(tracker.get() == null) continue;
+                if(!tracker.getTarget().get().equals(target)) continue;
+
+                if(API_INSTANCE.isInSameWorld(tracker.get(), portalEvent.getFrom()))
+                {
+                    API_INSTANCE.compassManager().setTrackerCompassTarget(tracker, portalEvent.getFrom());
+                    API_INSTANCE.getEntityAsTarget(target)
+                            .setWorldExitLocation(portalEvent.getFrom().getWorld(), portalEvent.getFrom());
+                }
             }
         }
     }
+
+    public static class Entity extends TrackerAPIEventExecutor
+    {
+        public Entity(TrackerAPI instance)
+        {
+            super(instance, EntityPortalEvent.getHandlerList(), EventPriority.NORMAL, true);
+        }
+
+        @Override
+        public void execute(Listener listener, Event event)
+        {
+            EntityPortalEvent portalEvent  = (EntityPortalEvent) event;
+
+            org.bukkit.entity.Entity target = portalEvent.getEntity();
+
+            if(!API_INSTANCE.isTarget(target)) return;
+
+            for(Tracker tracker : API_INSTANCE.getTrackers())
+            {
+                if(tracker.get() == null) continue;
+                if(!tracker.getTarget().get().equals(target)) continue;
+
+                if(API_INSTANCE.isInSameWorld(tracker.get(), portalEvent.getFrom()))
+                {
+                    API_INSTANCE.compassManager().setTrackerCompassTarget(tracker, portalEvent.getFrom());
+                    API_INSTANCE.getEntityAsTarget(target)
+                            .setWorldExitLocation(portalEvent.getFrom().getWorld(), portalEvent.getFrom());
+                }
+            }
+        }
+    }
+
 }

@@ -91,6 +91,7 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
         if(compass == null) return false;
 
         CompassMeta compassMeta = (CompassMeta) compass.getItemMeta();
+        compassMeta.setLodestoneTracked(false);
         compassMeta.setLodestone(location);
 
         compass.setItemMeta(compassMeta);
@@ -176,7 +177,7 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
         @Override
         public boolean isValidTrackerCompass(ItemStack itemStack)
         {
-            if(itemStack == null) throw new NullPointerException("ItemStack cannot be null.");
+            if(itemStack == null) return false;
             if(itemStack.getType().equals(Material.COMPASS) && itemStack.hasItemMeta())
             {
                 if(itemStack.getItemMeta().hasLore())

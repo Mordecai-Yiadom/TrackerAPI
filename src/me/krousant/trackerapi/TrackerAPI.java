@@ -3,6 +3,7 @@ package me.krousant.trackerapi;
 import me.krousant.trackerapi.event.executor.TrackerAPIEventExecutor;
 import me.krousant.trackerapi.event.executor.defaults.OnTargetMove;
 import me.krousant.trackerapi.event.executor.defaults.OnTargetWorldChange;
+import me.krousant.trackerapi.event.executor.defaults.OnTrackerCompassClick;
 import me.krousant.trackerapi.event.listener.TrackerAPIChangeListener;
 import me.krousant.trackerapi.event.listener.TrackerAPISettingsChangeListener;
 import org.bukkit.Location;
@@ -11,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.plugin.RegisteredListener;
 
 import java.io.Serializable;
@@ -260,11 +262,16 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
 
     private void registerDefaultExecutors()
     {
+        registerEventExecutor(new OnTrackerCompassClick(this));
+
         if(this.settings().get(TrackerAPISettings.Option.AUTO_TRACK_MOVEMENT))
             registerEventExecutor(new OnTargetMove(this));
 
         if(this.settings().get(TrackerAPISettings.Option.AUTO_TRACK_WORLD_EXITS))
-            registerEventExecutor(new OnTargetWorldChange(this));
+        {
+            registerEventExecutor(new OnTargetWorldChange.Entity(this));
+            registerEventExecutor(new OnTargetWorldChange.Player(this));
+        }
 
         if(this.settings().get(TrackerAPISettings.Option.DROP_COMPASS_ON_DEATH))
             registerEventExecutor(null);
@@ -287,8 +294,16 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
                 else unregisterEventExecutors(PlayerMoveEvent.getHandlerList());
 
             case AUTO_TRACK_WORLD_EXITS:
-                if(newValue) registerEventExecutor(new OnTargetWorldChange(this));
-                else unregisterEventExecutors(EntityPortalEvent.getHandlerList());
+                if(newValue)
+                {
+                    registerEventExecutor(new OnTargetWorldChange.Entity(this));
+                    registerEventExecutor(new OnTargetWorldChange.Player(this));
+                }
+                else
+                {
+                    unregisterEventExecutors(EntityPortalEvent.getHandlerList());
+                    unregisterEventExecutors(PlayerPortalEvent.getHandlerList());
+                }
 
             case DROPPABLE_COMPASS:
                 if(newValue) registerEventExecutor(null);

@@ -23,7 +23,7 @@ public abstract class TrackerAPIEventExecutor implements EventExecutor, Listener
         HANDLER_LIST = handlerList;
 
         REGISTERED_LISTENER = new RegisteredListener(this, this,
-                priority, TrackerAPIPlugin.PLUGIN, ignoreCancelled);
+                priority, TrackerAPIPlugin.plugin(), ignoreCancelled);
     }
 
     public HandlerList handlerList()

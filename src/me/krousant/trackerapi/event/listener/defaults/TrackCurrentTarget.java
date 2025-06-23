@@ -18,10 +18,19 @@ public class TrackCurrentTarget implements CompassActionListener
         Tracker tracker = instance.getPlayerAsTracker(((PlayerInteractEvent) event).getPlayer());
         if(tracker == null) return;
 
+        if(tracker.getTarget() == null)
+        {
+            instance.compassManager().sendCompassMessage(tracker,
+                    ChatColor.RED + "Nothing to track");
+            return;
+        }
 
-        if(tracker.getTarget() == null) return;
-        if(tracker.getTarget().get() == null) return;
-
+        if(tracker.getTarget().get() == null)
+        {
+            instance.compassManager().sendCompassMessage(tracker,
+                    ChatColor.RED + "Unable to track current target");
+            return;
+        }
 
         Location targetLocation;
 
@@ -29,7 +38,12 @@ public class TrackCurrentTarget implements CompassActionListener
             targetLocation = tracker.getTarget().get().getLocation();
         else targetLocation = tracker.getTarget().getWorldExitLocation(tracker.get().getWorld());
 
-        if(targetLocation == null) return;
+        if(targetLocation == null)
+        {
+            instance.compassManager().sendCompassMessage(tracker,
+                    ChatColor.RED + "Unable to track " + tracker.getTarget().get().getName());
+            return;
+        }
 
         instance.compassManager().setTrackerCompassTarget(tracker, targetLocation);
         instance.compassManager().sendCompassMessage(tracker,

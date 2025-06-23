@@ -3,6 +3,7 @@ package me.krousant.trackerapi.event.executor.defaults;
 import me.krousant.trackerapi.Tracker;
 import me.krousant.trackerapi.TrackerAPI;
 import me.krousant.trackerapi.event.executor.TrackerAPIEventExecutor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;

@@ -26,9 +26,10 @@ public class OnTargetMove extends TrackerAPIEventExecutor
         Player player = playerMoveEvent.getPlayer();
         if(!API_INSTANCE.isTarget(player)) return;
 
-        for(Tracker tracker : API_INSTANCE.getTrackers())
+        for(Tracker tracker : API_INSTANCE.getOnlineTrackers())
         {
-            if(tracker.get() == null) continue;
+            if(tracker.getTarget() == null) continue;
+            if(tracker.getTarget().get() == null) continue;
             if(!tracker.getTarget().get().equals(player)) continue;
 
             if(API_INSTANCE.isInSameWorld(tracker.get(), player))

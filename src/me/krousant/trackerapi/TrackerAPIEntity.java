@@ -12,11 +12,13 @@ public abstract class TrackerAPIEntity<T extends Entity> implements Serializable
 {
     private UUID ID;
     private final LinkedList<TrackerAPIEntityChangeListener> CHANGE_LISTENERS;
+    private boolean isNull;
 
     public TrackerAPIEntity(T entity)
     {
         if(entity  == null) throw new NullPointerException("Entity cannot be null.");
         ID = entity.getUniqueId();
+        isNull = false;
         CHANGE_LISTENERS = new LinkedList<>();
     }
 
@@ -50,5 +52,16 @@ public abstract class TrackerAPIEntity<T extends Entity> implements Serializable
     {
         for(TrackerAPIEntityChangeListener listener : CHANGE_LISTENERS)
             listener.entityChanged(changes);
+    }
+
+    //TODO: Implement (internal) flags for TrackerAPIEntities || ex: NULL_FLAG,
+    protected synchronized void setNull()
+    {
+        isNull = true;
+    }
+
+    public boolean isNull()
+    {
+        return isNull;
     }
 }

@@ -60,22 +60,39 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
      ******************/
     public boolean addTracker(Player player)
     {
-        Tracker tracker;
+        if(isTracker(player)) return false;
+        Tracker tracker = new Tracker(player);
 
-        try {tracker = new Tracker(player);}
-        catch(NullPointerException ex){return false;}
-
-        boolean added = TRACKERS.add(tracker);
-        if(added) notifyTrackerAdded(tracker);
-        return added;
+        TRACKERS.add(tracker);
+        notifyTrackerAdded(tracker);
+        return true;
     }
 
     public boolean removeTracker(Tracker tracker)
     {
         if(tracker == null) return false;
+        if(!isTracker(tracker.id())) return false;
 
-        boolean removed = TRACKERS.add(tracker);
-        if(removed) notifyTrackerRemoved(tracker);
+        TRACKERS.remove(tracker);
+
+        notifyTrackerRemoved(tracker);
+        tracker.setNull();
+
+        return true;
+    }
+
+    public boolean removeTracker(Player player)
+    {
+        if(!isTracker(player)) return false;
+        Tracker tracker = getPlayerAsTracker(player);
+
+        if(tracker == null) return false;
+        boolean removed = TRACKERS.remove(tracker);
+        if(removed)
+        {
+            notifyTrackerRemoved(tracker);
+            tracker.setNull();
+        }
         return removed;
     }
 
@@ -101,7 +118,7 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
     {
         if(player == null) throw new NullPointerException("Player cannot be null.");
 
-        for(Tracker tracker : getTrackers())
+        for(Tracker tracker : TRACKERS)
             if(tracker.get().equals(player))
                 return tracker;
         return null;
@@ -113,30 +130,54 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
         return (HashSet<Tracker>) ((HashSet<Tracker>) TRACKERS).clone();
     }
 
+    public Set<Tracker> getOnlineTrackers()
+    {
+        Set<Tracker> onlineTrackers = new HashSet<>();
+        for(Tracker tracker : TRACKERS)
+            if(tracker.get() != null) onlineTrackers.add(tracker);
+
+        return onlineTrackers;
+    }
+
 
     /*******************
         TARGET METHODS
      ******************/
     public boolean addTarget(Entity entity)
     {
-        Target target;
+        if(isTarget(entity)) return false;
+        Target target = new Target(entity);
 
-        try {target = new Target(entity);}
-        catch(NullPointerException ex){return false;}
-
-        boolean added = TARGETS.add(target);
-        if(added) notifyTargetAdded(target);
-
-        return added;
+        TARGETS.add(target);
+        notifyTargetAdded(target);
+        return true;
     }
 
     public boolean removeTarget(Target target)
     {
         if(target == null) return false;
+        if(!isTracker(target.id())) return false;
 
-        boolean removed = TARGETS.add(target);
-        if(removed) notifyTargetRemoved(target);
+        TARGETS.remove(target);
 
+        notifyTargetRemoved(target);
+        target.setNull();
+
+        return true;
+    }
+
+    public boolean removeTarget(Entity entity)
+    {
+        if(!isTarget(entity)) return false;
+        Target target = getEntityAsTarget(entity);
+
+        if (target == null) return false;
+        boolean removed = TARGETS.remove(target);
+        if (removed)
+        {
+            notifyTargetRemoved(target);
+            target.setNull();
+        }
         return removed;
     }
 
@@ -162,7 +203,7 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
     {
         if(entity == null) throw new NullPointerException("Entity cannot be null.");
 
-        for(Target target : getTargets())
+        for(Target target : TARGETS)
             if(target.get().equals(entity))
                 return target;
         return null;

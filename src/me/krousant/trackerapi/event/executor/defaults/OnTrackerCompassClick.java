@@ -25,6 +25,7 @@ public class OnTrackerCompassClick extends TrackerAPIEventExecutor
 
         Tracker tracker = API_INSTANCE.getPlayerAsTracker(playerInteractEvent.getPlayer());
         if(tracker == null) return;
+        //if(tracker.isNull()) return;
 
         if(!API_INSTANCE.compassManager().isTrackerCompass(playerInteractEvent.getItem())) return;
 

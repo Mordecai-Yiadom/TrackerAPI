@@ -34,6 +34,7 @@ public class Tracker extends TrackerAPIEntity<Player>
         this.target = target;
     }
 
+
     //TODO: Add better error handling
     public void setCompassAction(CompassAction action, CompassActionListener listener)
     {

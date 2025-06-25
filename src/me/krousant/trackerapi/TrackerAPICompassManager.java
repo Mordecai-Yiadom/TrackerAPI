@@ -98,6 +98,10 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
         compassMeta.setLodestone(location);
 
         compass.setItemMeta(compassMeta);
+
+        if(API_INSTANCE.settings().get(TrackerAPISettings.Option.SAVE_LAST_TRACKED_LOCATION) && location != null)
+            tracker.setLastTrackedLocation(location.getWorld(), location);
+
         return true;
     }
 

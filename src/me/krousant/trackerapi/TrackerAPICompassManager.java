@@ -134,7 +134,7 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
     @Override
     public void trackerAdded(Tracker tracker)
     {
-        if(API_INSTANCE.settings().get(TrackerAPISettings.Option.GIVE_COMPASS_ON_ADD))
+        if(API_INSTANCE.settings().get(TrackerAPISettings.Option.GIVE_TRACKER_COMPASS_ON_ADD))
         {
             Player trackerPlayer = tracker.get();
             if(trackerPlayer == null) return;
@@ -147,7 +147,7 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
     @Override
     public void trackerRemoved(Tracker tracker)
     {
-        if(API_INSTANCE.settings().get(TrackerAPISettings.Option.REMOVE_COMPASS_ON_REMOVE))
+        if(API_INSTANCE.settings().get(TrackerAPISettings.Option.REMOVE_TRACKER_COMPASS_ON_REMOVE))
         {
             Player trackerPlayer = tracker.get();
             if(trackerPlayer == null) return;

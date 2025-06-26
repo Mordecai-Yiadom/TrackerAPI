@@ -3,6 +3,7 @@ package me.krousant.trackerapi;
 import me.krousant.trackerapi.event.action.CompassAction;
 import me.krousant.trackerapi.event.action.NullCompassAction;
 import me.krousant.trackerapi.event.listener.CompassActionListener;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -27,6 +28,12 @@ public class Tracker extends TrackerAPIEntity<Player>
         COMPASS_ACTION_MAP = new HashMap<>();
         for(CompassAction action : CompassAction.values())
             COMPASS_ACTION_MAP.put(action, NullCompassAction.INSTANCE);
+    }
+
+    @Override
+    public Player get()
+    {
+        return Bukkit.getPlayer(id());
     }
 
     public Target getTarget()

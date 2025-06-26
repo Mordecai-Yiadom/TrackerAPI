@@ -118,7 +118,7 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
         if(player == null) throw new NullPointerException("Player cannot be null.");
 
         for(Tracker tracker : TRACKERS)
-            if(tracker.get().equals(player))
+            if(tracker.id().equals(player.getUniqueId()))
                 return tracker;
         return null;
     }

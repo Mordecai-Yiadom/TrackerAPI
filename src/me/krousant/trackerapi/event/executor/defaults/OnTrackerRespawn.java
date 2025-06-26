@@ -23,7 +23,7 @@ public class OnTrackerRespawn extends TrackerAPIEventExecutor
         PlayerRespawnEvent event = (PlayerRespawnEvent) e;
         Tracker tracker = API_INSTANCE.getPlayerAsTracker(event.getPlayer());
 
-        if(tracker == null) return;
+        if(tracker == null && event.getRespawnReason() != PlayerRespawnEvent.RespawnReason.DEATH) return;
 
         if(!API_INSTANCE.compassManager().hasTrackerCompass(tracker.get()))
             API_INSTANCE.compassManager().giveTrackerCompass(tracker.get());

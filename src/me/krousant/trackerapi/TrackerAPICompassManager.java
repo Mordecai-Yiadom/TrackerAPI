@@ -4,6 +4,7 @@ import me.krousant.trackerapi.event.action.CompassAction;
 import me.krousant.trackerapi.event.action.NullCompassAction;
 import me.krousant.trackerapi.event.listener.CompassActionListener;
 import me.krousant.trackerapi.event.listener.TrackerAPIChangeListener;
+import me.krousant.trackerapi.event.listener.defaults.TrackCurrentTarget;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
@@ -49,7 +50,12 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
     {
         if(player == null) return false;
 
-        player.getInventory().addItem(DEFAULT_GENERIC_COMPASS);
+        player.getInventory().addItem(genericCompass);
+        Tracker tracker = API_INSTANCE.getPlayerAsTracker(player);
+
+        if(tracker != null && API_INSTANCE.settings().get(TrackerAPISettings.Option.TRACK_TARGET_ON_COMPASS_RECEIVE))
+            TrackCurrentTarget.actionPerformed(API_INSTANCE, tracker);
+
         return true;
     }
 
@@ -88,6 +94,7 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
 
     public boolean setTrackerCompassTarget(Tracker tracker, Location location)
     {
+        if(tracker == null) return false;
         if(tracker.get() == null) return false;
 
         ItemStack compass = getTrackerCompassFromInventory(tracker.get().getInventory());

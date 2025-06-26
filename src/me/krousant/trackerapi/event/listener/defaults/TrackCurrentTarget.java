@@ -3,6 +3,7 @@ package me.krousant.trackerapi.event.listener.defaults;
 import me.krousant.trackerapi.Target;
 import me.krousant.trackerapi.Tracker;
 import me.krousant.trackerapi.TrackerAPI;
+import me.krousant.trackerapi.TrackerAPISettings;
 import me.krousant.trackerapi.event.listener.CompassActionListener;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -16,45 +17,14 @@ public class TrackCurrentTarget implements CompassActionListener
     {
         if(!(event instanceof PlayerInteractEvent)) return;
 
-        Tracker tracker = instance.getPlayerAsTracker(((PlayerInteractEvent) event).getPlayer());
-        if(tracker == null) return;
-
-        if(tracker.getTarget() == null)
-        {
-            instance.compassManager().sendCompassMessage(tracker,
-                    ChatColor.RED + "Nothing to track");
-            return;
-        }
-
-        if(tracker.getTarget().get() == null)
-        {
-            instance.compassManager().sendCompassMessage(tracker,
-                    ChatColor.RED + "Unable to track current target");
-            return;
-        }
-
-        Location targetLocation;
-
-        if(instance.isInSameWorld(tracker.get(), tracker.getTarget().get()))
-            targetLocation = tracker.getTarget().get().getLocation();
-        else targetLocation = tracker.getTarget().getWorldExitLocation(tracker.get().getWorld());
-
-        if(targetLocation == null)
-        {
-            instance.compassManager().sendCompassMessage(tracker,
-                    ChatColor.RED + "Unable to track " + tracker.getTarget().get().getName());
-            return;
-        }
-
-        instance.compassManager().setTrackerCompassTarget(tracker, targetLocation);
-        instance.compassManager().sendCompassMessage(tracker,
-                ChatColor.GREEN + "Now tracking " + tracker.getTarget().get().getName());
+        TrackCurrentTarget.actionPerformed(instance,
+                instance.getPlayerAsTracker(((PlayerInteractEvent) event).getPlayer()));
     }
 
-    public void actionPerformed(TrackerAPI instance, Tracker tracker, Target target)
+    public static void actionPerformed(TrackerAPI instance, Tracker tracker)
     {
 
-        if(tracker == null || target == null) return;
+        if(tracker == null || instance == null) return;
 
         if(tracker.getTarget() == null)
         {
@@ -74,7 +44,9 @@ public class TrackCurrentTarget implements CompassActionListener
 
         if(instance.isInSameWorld(tracker.get(), tracker.getTarget().get()))
             targetLocation = tracker.getTarget().get().getLocation();
-        else targetLocation = tracker.getTarget().getWorldExitLocation(tracker.get().getWorld());
+        else if(instance.settings().get(TrackerAPISettings.Option.AUTO_TRACK_WORLD_EXITS))
+            targetLocation = tracker.getTarget().getWorldExitLocation(tracker.get().getWorld());
+        else targetLocation = null;
 
         if(targetLocation == null)
         {

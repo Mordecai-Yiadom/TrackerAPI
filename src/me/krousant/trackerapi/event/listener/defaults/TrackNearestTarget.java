@@ -3,8 +3,10 @@ package me.krousant.trackerapi.event.listener.defaults;
 import me.krousant.trackerapi.Target;
 import me.krousant.trackerapi.Tracker;
 import me.krousant.trackerapi.TrackerAPI;
+import me.krousant.trackerapi.TrackerAPISettings;
 import me.krousant.trackerapi.event.listener.CompassActionListener;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -16,28 +18,33 @@ public class TrackNearestTarget implements CompassActionListener
     {
         Tracker tracker = instance.getPlayerAsTracker(((PlayerEvent)event).getPlayer());
 
+        if(tracker == null) return;
+
         Target nearestTarget = null;
-        double distanceToNearestTarget = Double.MAX_VALUE;
+        double nearestDistance = Double.MAX_VALUE;
         double currdistance;
 
         for(Target target : instance.getTargets())
         {
-            if(target.get() == null) continue;
+            if(target.get() == null || target.id().equals(tracker.id())) continue;
 
             if(instance.isInSameWorld(target.get(), tracker.get()))
                 currdistance = tracker.get().getLocation().distance(target.get().getLocation());
+
+            else if(!instance.settings().get(TrackerAPISettings.Option.AUTO_TRACK_WORLD_EXITS)
+                    || target.getWorldExitLocation(tracker.get().getWorld()) == null)
+                currdistance = Double.MAX_VALUE;
+
             else
-            {
-                if(target.getWorldExitLocation(target.get().getWorld()) == null) continue;
                 currdistance = tracker.get().getLocation()
-                        .distance(target.getWorldExitLocation(target.get().getWorld()));
-            }
+                        .distance(target.getWorldExitLocation(tracker.get().getWorld()));
 
 
-            if(currdistance < distanceToNearestTarget)
+
+            if(currdistance < nearestDistance)
             {
                 nearestTarget = target;
-                distanceToNearestTarget = currdistance;
+                nearestDistance = currdistance;
             }
         }
 
@@ -49,8 +56,6 @@ public class TrackNearestTarget implements CompassActionListener
         }
 
         tracker.setTarget(nearestTarget);
-        instance.compassManager().setTrackerCompassTarget(tracker, nearestTarget.get().getLocation());
-        instance.compassManager().sendCompassMessage(tracker,
-                ChatColor.GREEN + "Now tracking " + nearestTarget.get().getName());
+        TrackCurrentTarget.actionPerformed(instance, tracker);
     }
 }

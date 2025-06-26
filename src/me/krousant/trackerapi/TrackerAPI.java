@@ -44,6 +44,7 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
                     null, null));
         else setCompassManager(compassManager);
 
+        loadSettings();
         registerDefaultExecutors();
     }
 
@@ -307,21 +308,12 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
     private void registerDefaultExecutors()
     {
         registerEventExecutor(new OnTrackerCompassClick(this));
+    }
 
-        if(this.settings().get(TrackerAPISettings.Option.AUTO_TRACK_MOVEMENT))
-            registerEventExecutor(new OnTargetMove(this));
-
-        if(this.settings().get(TrackerAPISettings.Option.AUTO_TRACK_WORLD_EXITS))
-        {
-            registerEventExecutor(new OnTargetWorldChange.Entity(this));
-            registerEventExecutor(new OnTargetWorldChange.Player(this));
-        }
-
-        if(this.settings().get(TrackerAPISettings.Option.DROP_TRACKER_COMPASS_ON_DEATH))
-            registerEventExecutor(new OnTrackerDeath(this));
-
-        if(this.settings().get(TrackerAPISettings.Option.DROPPABLE_TRACKER_COMPASS))
-            registerEventExecutor(new OnTrackerDropCompass(this));
+    private void loadSettings()
+    {
+        for(TrackerAPISettings.Option option : TrackerAPISettings.Option.values())
+            settingChanged(option, false, this.settings.get(option));
     }
 
     @Override
@@ -351,11 +343,15 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
 
             case DROPPABLE_TRACKER_COMPASS:
                 if(newValue) registerEventExecutor(new OnTrackerDropCompass(this));
-                else unregisterEventExecutor(new OnTrackerDropCompass(this));
+                else unregisterEventExecutors(new OnTrackerDropCompass(this).handlerList());
 
             case DROP_TRACKER_COMPASS_ON_DEATH:
                 if(newValue) registerEventExecutor(new OnTrackerDeath(this));
-                else unregisterEventExecutor(new OnTrackerDeath(this));
+                else unregisterEventExecutors(new OnTrackerDeath(this).handlerList());
+
+            case GIVE_TRACKER_COMPASS_ON_RESPAWN:
+                if(newValue) registerEventExecutor(new OnTrackerRespawn(this));
+                else unregisterEventExecutors(new OnTrackerRespawn(this).handlerList());
         }
     }
 }

@@ -47,7 +47,7 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
 
     public boolean giveTrackerCompass(Player player)
     {
-        if(player == null) throw new NullPointerException("Player cannot be null");
+        if(player == null) return false;
 
         player.getInventory().addItem(DEFAULT_GENERIC_COMPASS);
         return true;
@@ -108,7 +108,7 @@ public class TrackerAPICompassManager implements TrackerAPIChangeListener
     public void sendCompassMessage(Tracker tracker, String message)
     {
         if(tracker.get() == null || message == null ||
-                !API_INSTANCE.settings().get(TrackerAPISettings.Option.ENABLE_COMPASS_MESSAGES)) return;
+                !API_INSTANCE.settings().get(TrackerAPISettings.Option.ENABLE_TRACKER_COMPASS_MESSAGES)) return;
 
         tracker.get().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
     }

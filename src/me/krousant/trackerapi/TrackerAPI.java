@@ -1,10 +1,7 @@
 package me.krousant.trackerapi;
 
 import me.krousant.trackerapi.event.executor.TrackerAPIEventExecutor;
-import me.krousant.trackerapi.event.executor.defaults.OnTargetMove;
-import me.krousant.trackerapi.event.executor.defaults.OnTargetWorldChange;
-import me.krousant.trackerapi.event.executor.defaults.OnTrackerCompassClick;
-import me.krousant.trackerapi.event.executor.defaults.OnTrackerDropCompass;
+import me.krousant.trackerapi.event.executor.defaults.*;
 import me.krousant.trackerapi.event.listener.TrackerAPIChangeListener;
 import me.krousant.trackerapi.event.listener.TrackerAPISettingsChangeListener;
 import org.bukkit.Location;
@@ -321,7 +318,7 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
         }
 
         if(this.settings().get(TrackerAPISettings.Option.DROP_TRACKER_COMPASS_ON_DEATH))
-            registerEventExecutor(null);
+            registerEventExecutor(new OnTrackerDeath(this));
 
         if(this.settings().get(TrackerAPISettings.Option.DROPPABLE_TRACKER_COMPASS))
             registerEventExecutor(new OnTrackerDropCompass(this));
@@ -353,12 +350,12 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
                 }
 
             case DROPPABLE_TRACKER_COMPASS:
-                if(newValue) registerEventExecutor(null);
-                else unregisterEventExecutor(null);
+                if(newValue) registerEventExecutor(new OnTrackerDropCompass(this));
+                else unregisterEventExecutor(new OnTrackerDropCompass(this));
 
             case DROP_TRACKER_COMPASS_ON_DEATH:
-                if(newValue) registerEventExecutor(null);
-                else unregisterEventExecutor(null);
+                if(newValue) registerEventExecutor(new OnTrackerDeath(this));
+                else unregisterEventExecutor(new OnTrackerDeath(this));
         }
     }
 }

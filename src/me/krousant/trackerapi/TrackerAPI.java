@@ -342,11 +342,11 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
                 }
 
             case DROPPABLE_TRACKER_COMPASS:
-                if(newValue) registerEventExecutor(new OnTrackerDropCompass(this));
+                if(!newValue) registerEventExecutor(new OnTrackerDropCompass(this));
                 else unregisterEventExecutors(new OnTrackerDropCompass(this).handlerList());
 
             case DROP_TRACKER_COMPASS_ON_DEATH:
-                if(newValue) registerEventExecutor(new OnTrackerDeath(this));
+                if(!newValue) registerEventExecutor(new OnTrackerDeath(this));
                 else unregisterEventExecutors(new OnTrackerDeath(this).handlerList());
 
             case GIVE_TRACKER_COMPASS_ON_RESPAWN:

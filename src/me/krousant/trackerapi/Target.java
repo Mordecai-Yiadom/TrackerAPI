@@ -1,8 +1,12 @@
 package me.krousant.trackerapi;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+
 import java.util.*;
 
 public class Target extends TrackerAPIEntity<Entity>
@@ -15,9 +19,15 @@ public class Target extends TrackerAPIEntity<Entity>
         WORLD_EXITS = new HashMap<>();
     }
 
+    public Entity gets()
+    {
+        if(super.get() == null) return null;
+        return (super.get().getType().equals(EntityType.PLAYER)) ? Bukkit.getPlayer(id()) : super.get();
+    }
+
     public Location getWorldExitLocation(World world)
     {
-        if(world == null) return null;
+        if(world == null) throw new NullPointerException("World cannot be null.");
         return WORLD_EXITS.get(world.getUID());
     }
 

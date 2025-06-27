@@ -5,6 +5,7 @@ import me.krousant.trackerapi.Tracker;
 import me.krousant.trackerapi.TrackerAPI;
 import me.krousant.trackerapi.TrackerAPISettings;
 import me.krousant.trackerapi.event.listener.CompassActionListener;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
@@ -16,6 +17,8 @@ public class TrackNearestTarget implements CompassActionListener
     @Override
     public void actionPerformed(TrackerAPI instance, Event event)
     {
+        if(!(event instanceof PlayerEvent)) return;
+
         Tracker tracker = instance.getPlayerAsTracker(((PlayerEvent)event).getPlayer());
 
         if(tracker == null) return;
@@ -33,13 +36,11 @@ public class TrackNearestTarget implements CompassActionListener
 
             else if(!instance.settings().get(TrackerAPISettings.Option.AUTO_TRACK_WORLD_EXITS)
                     || target.getWorldExitLocation(tracker.get().getWorld()) == null)
-                currdistance = Double.MAX_VALUE;
+                continue;
 
             else
                 currdistance = tracker.get().getLocation()
                         .distance(target.getWorldExitLocation(tracker.get().getWorld()));
-
-
 
             if(currdistance < nearestDistance)
             {

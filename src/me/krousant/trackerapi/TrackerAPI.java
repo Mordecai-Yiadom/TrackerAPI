@@ -211,7 +211,7 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
 
     public Set<Target> getTargets()
     {
-        return (HashSet<Target>) ((HashSet<Target>) TARGETS).clone();
+        return (Set<Target>) ((HashSet<Target>) TARGETS).clone();
     }
 
     public boolean isInSameWorld(Entity e1, Entity e2)
@@ -234,7 +234,32 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
         for(TrackerAPIEventExecutor eventExecutor : ACTIVE_EVENT_EXECUTORS)
             eventExecutor.handlerList().unregister(eventExecutor.registeredListener());
 
+        clearTrackers();
+        clearTargets();
+
         notifyInstanceDestroyed();
+    }
+
+    public void clearTrackers()
+    {
+        for(Tracker tracker : getTrackers())
+            removeTracker(tracker);
+    }
+
+    public void clearTargets()
+    {
+        for(Target target : getTargets())
+            removeTarget(target);
+    }
+
+    public int trackerCount()
+    {
+        return TRACKERS.size();
+    }
+
+    public int targetCount()
+    {
+        return TARGETS.size();
     }
 
     public void addChangeListener(TrackerAPIChangeListener listener)

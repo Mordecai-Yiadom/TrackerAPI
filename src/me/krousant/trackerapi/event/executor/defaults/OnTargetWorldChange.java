@@ -30,6 +30,9 @@ public class OnTargetWorldChange
             org.bukkit.entity.Player target = portalEvent.getPlayer();
             if(!API_INSTANCE.isTarget(target)) return;
 
+            API_INSTANCE.getEntityAsTarget(target)
+                    .setWorldExitLocation(portalEvent.getFrom().getWorld(), portalEvent.getFrom());
+
             for(Tracker tracker : API_INSTANCE.getTrackers())
             {
                 if(tracker.get() == null) continue;
@@ -38,8 +41,6 @@ public class OnTargetWorldChange
                 if(API_INSTANCE.isInSameWorld(tracker.get(), portalEvent.getFrom()))
                 {
                     API_INSTANCE.compassManager().setTrackerCompassTarget(tracker, portalEvent.getFrom());
-                    API_INSTANCE.getEntityAsTarget(target)
-                            .setWorldExitLocation(portalEvent.getFrom().getWorld(), portalEvent.getFrom());
                 }
             }
         }
@@ -61,6 +62,9 @@ public class OnTargetWorldChange
 
             if(!API_INSTANCE.isTarget(target)) return;
 
+            API_INSTANCE.getEntityAsTarget(target)
+                    .setWorldExitLocation(portalEvent.getFrom().getWorld(), portalEvent.getFrom());
+
             for(Tracker tracker : API_INSTANCE.getTrackers())
             {
                 if(tracker.get() == null) continue;
@@ -69,8 +73,6 @@ public class OnTargetWorldChange
                 if(API_INSTANCE.isInSameWorld(tracker.get(), portalEvent.getFrom()))
                 {
                     API_INSTANCE.compassManager().setTrackerCompassTarget(tracker, portalEvent.getFrom());
-                    API_INSTANCE.getEntityAsTarget(target)
-                            .setWorldExitLocation(portalEvent.getFrom().getWorld(), portalEvent.getFrom());
                 }
             }
         }

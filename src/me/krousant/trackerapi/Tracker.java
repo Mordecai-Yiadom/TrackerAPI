@@ -63,11 +63,13 @@ public class Tracker extends TrackerAPIEntity<Player>
     }
 
     //TODO: Add better error handling
-    public void setCompassAction(CompassAction action, CompassActionListener listener)
+    public Tracker setCompassAction(CompassAction action, CompassActionListener listener)
     {
         if(action == null) throw new NullPointerException("CompassAction cannot be null.");
         if(listener == null) COMPASS_ACTION_MAP.replace(action, NullCompassAction.INSTANCE);
         else COMPASS_ACTION_MAP.replace(action, listener);
+
+        return this;
     }
 
     public CompassActionListener getCompassAction(CompassAction action)

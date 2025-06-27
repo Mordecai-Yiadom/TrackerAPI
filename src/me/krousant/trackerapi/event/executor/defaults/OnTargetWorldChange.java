@@ -36,6 +36,8 @@ public class OnTargetWorldChange
             for(Tracker tracker : API_INSTANCE.getTrackers())
             {
                 if(tracker.get() == null) continue;
+                if(tracker.getTarget() == null) continue;
+                if(tracker.getTarget().isNull()) continue;
                 if(!tracker.getTarget().get().equals(target)) continue;
 
                 if(API_INSTANCE.isInSameWorld(tracker.get(), portalEvent.getFrom()))

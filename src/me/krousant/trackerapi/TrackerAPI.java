@@ -60,7 +60,7 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
     public boolean addTracker(Player player)
     {
         if(isTracker(player)) return false;
-        Tracker tracker = new Tracker(player);
+        Tracker tracker = new Tracker(this, player);
 
         TRACKERS.add(tracker);
         notifyTrackerAdded(tracker);
@@ -93,6 +93,12 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
             tracker.setNull();
         }
         return removed;
+    }
+
+    public boolean isTracker(Tracker tracker)
+    {
+        if(tracker == null) return false;
+        return tracker.apiInstance().equals(this) && TRACKERS.contains(tracker);
     }
 
     public boolean isTracker(Player player)
@@ -145,7 +151,7 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
     public boolean addTarget(Entity entity)
     {
         if(isTarget(entity)) return false;
-        Target target = new Target(entity);
+        Target target = new Target(this, entity);
 
         TARGETS.add(target);
         notifyTargetAdded(target);
@@ -174,11 +180,22 @@ public class TrackerAPI implements TrackerAPISettingsChangeListener, Serializabl
         boolean removed = TARGETS.remove(target);
         if (removed)
         {
+            for(Tracker tracker : getTrackers())
+                if(tracker.getTarget().equals(target))
+                    tracker.setTarget(null);
+
             notifyTargetRemoved(target);
             target.setNull();
         }
         return removed;
     }
+
+    public boolean isTarget(Target target)
+    {
+        if(target == null) return false;
+        return target.apiInstance().equals(this) && TARGETS.contains(target);
+    }
+
 
     public boolean isTarget(Entity entity)
     {

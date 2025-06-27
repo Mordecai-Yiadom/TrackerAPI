@@ -19,9 +19,9 @@ public class Tracker extends TrackerAPIEntity<Player>
     private final Map<CompassAction, CompassActionListener> COMPASS_ACTION_MAP;
     private final HashMap<UUID, Location> LAST_TRACKED_LOCATION;
 
-    protected Tracker(Player player)
+    protected Tracker(TrackerAPI instance, Player player)
     {
-        super(player);
+        super(instance, player);
 
         LAST_TRACKED_LOCATION = new HashMap<>();
 

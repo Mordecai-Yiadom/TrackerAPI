@@ -13,13 +13,17 @@ public abstract class TrackerAPIEntity<T extends Entity> implements Serializable
     private UUID ID;
     private final LinkedList<TrackerAPIEntityChangeListener> CHANGE_LISTENERS;
     private boolean isNull;
+    private final TrackerAPI instance;
 
-    public TrackerAPIEntity(T entity)
+    public TrackerAPIEntity(TrackerAPI instance, T entity)
     {
         if(entity  == null) throw new NullPointerException("Entity cannot be null.");
+        if(instance  == null) throw new NullPointerException("TrackerAPI cannot be null.");
+
         ID = entity.getUniqueId();
         isNull = false;
         CHANGE_LISTENERS = new LinkedList<>();
+        this.instance = instance;
     }
 
     public T get()
@@ -30,6 +34,11 @@ public abstract class TrackerAPIEntity<T extends Entity> implements Serializable
     public UUID id()
     {
         return ID;
+    }
+
+    public TrackerAPI apiInstance()
+    {
+        return instance;
     }
 
     public void addChangeListener(TrackerAPIEntityChangeListener listener)

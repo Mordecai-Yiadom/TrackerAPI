@@ -13,9 +13,9 @@ public class Target extends TrackerAPIEntity<Entity>
 {
     private final HashMap<UUID, Location> WORLD_EXITS;
 
-    protected Target(Entity entity)
+    protected Target(TrackerAPI instance, Entity entity)
     {
-        super(entity);
+        super(instance, entity);
         WORLD_EXITS = new HashMap<>();
     }
 
